@@ -10,10 +10,34 @@ const navLinks = [
   { name: "Services", href: "/services" }
 ];
 
+const authButtons = [
+  { name: "Sign In", href: "/login", desktopVariant: "ghost", mobileVariant: "outline" },
+  { name: "Get Started", href: "/register", desktopVariant: "default", mobileVariant: "default" }
+];
+
+
+
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+  
+  //helper function to render auth buttons
+  const renderAuthGroup = (isMobile = false) => (
+    authButtons.map((btn) => (
+      <Button
+        key={btn.name}
+        asChild
+        variant={isMobile ? btn.mobileVariant : btn.desktopVariant}
+        className={cn(isMobile && "w-full")}
+        size={isMobile ? "lg" : "default"}
+        onClick={() => setIsOpen(false)} // Closes mobile menu on click
+      >
+        <Link to={btn.href}>{btn.name}</Link>
+      </Button>
+    ))
+  );
 
   return (
     <>
@@ -45,8 +69,7 @@ const Navbar = () => {
 
             {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center space-x-2">
-              <Button variant="ghost">Sign In</Button>
-              <Button>Get Started</Button>
+              {renderAuthGroup(false)}
             </div>
 
             {/* Mobile Menu Button */}
@@ -90,13 +113,8 @@ const Navbar = () => {
             ))}
 
             {/* Mobile Auth Buttons */}
-            <div className="flex flex-col space-y-3 pt-6 mt-4 border-t">
-              <Button variant="outline" className="w-full" size="lg">
-                Sign In
-              </Button>
-              <Button className="w-full" size="lg">
-                Get Started
-              </Button>
+            <div className="flex flex-col space-y-3 pt-6 mt-4">
+              {renderAuthGroup(true)}
             </div>
           </div>
         </div>
