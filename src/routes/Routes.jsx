@@ -1,4 +1,5 @@
 
+import DashboardLayout from '@/layouts/dashboard/DashboardLayout';
 import MainLayout from '@/layouts/public/MainLayout';
 import LoginPage from '@/pages/public/auth/LoginPage';
 import RegisterPage from '@/pages/public/auth/RegisterPage';
@@ -25,6 +26,15 @@ const Routes= createBrowserRouter([
   {
     path: '/register',
     element: <RegisterPage/>,
+  },
+  {
+    path: '/dashboard',
+    element: <DashboardLayout/>,
+    children: [
+      {
+        
+      }
+    ]
   }
 ])
 
