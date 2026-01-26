@@ -1,9 +1,10 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "./shared/DashboardSidebar";
-import DashboardHeader from "./shared/DashboardHeader"; // Import your new header
+import DashboardHeader from "./shared/DashboardHeader";
 import DashboardFooter from "./shared/DashboardFooter";
+import { Outlet } from "react-router-dom";
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = () => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -13,10 +14,8 @@ const DashboardLayout = ({ children }) => {
         {/* Main Content Area */}
         <div className="flex flex-col flex-1">
           <DashboardHeader />
-          
           <main className="flex-1 p-6">
-            {/* Sections Based on Routes */}
-            {children}
+           <Outlet/>
           </main>
           <DashboardFooter/>
         </div>

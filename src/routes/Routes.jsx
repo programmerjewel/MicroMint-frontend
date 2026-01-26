@@ -1,6 +1,10 @@
 
 import DashboardLayout from '@/layouts/dashboard/DashboardLayout';
 import MainLayout from '@/layouts/public/MainLayout';
+import TaskListPage from '@/pages/dashboard/worker/TaskListPage';
+import WorkerHomePage from '@/pages/dashboard/worker/WorkerHomePage';
+import WorkerSubmissionPage from '@/pages/dashboard/worker/WorkerSubmissionPage';
+import WorkerWithdrawalPage from '@/pages/dashboard/worker/WorkerWithdrawalPage';
 import LoginPage from '@/pages/public/auth/LoginPage';
 import RegisterPage from '@/pages/public/auth/RegisterPage';
 import ErrorPage from '@/pages/public/ErrorPage';
@@ -32,7 +36,20 @@ const Routes= createBrowserRouter([
     element: <DashboardLayout/>,
     children: [
       {
-        
+        path: 'worker-home',
+        element: <WorkerHomePage/>,
+      },
+      {
+        path: 'task-list',
+        element: <TaskListPage/>,
+      },
+      {
+        path: 'my-submission',
+        element: <WorkerSubmissionPage/>,
+      },
+      {
+        path: 'withdrawals',
+        element: <WorkerWithdrawalPage/>,
       }
     ]
   }
