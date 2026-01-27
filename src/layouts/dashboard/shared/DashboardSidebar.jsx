@@ -61,7 +61,7 @@ const menuItemsArr = {
 
 // 👇 dummy user data (replace later with backend/AuthContext)
 const user = {
-  role: "worker", // worker | buyer | admin
+  role: "buyer", // worker | buyer | admin
   name: "John Doe",
   email: "john.doe@example.com",
   avatar: "",
