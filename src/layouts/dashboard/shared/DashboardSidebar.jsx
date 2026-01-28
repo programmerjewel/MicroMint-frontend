@@ -55,13 +55,13 @@ const menuItemsArr = {
   admin: [
     { title: "Home", url: "admin-home", icon: Home },
     { title: "Manage Users", url: "manage-users", icon: Users },
-    { title: "Manage Task", url: "manage-tasks", icon: ClipboardList },
+    { title: "Manage Tasks", url: "manage-tasks", icon: ClipboardList },
   ],
 };
 
 // 👇 dummy user data (replace later with backend/AuthContext)
 const user = {
-  role: "buyer", // worker | buyer | admin
+  role: "admin", // worker | buyer | admin
   name: "John Doe",
   email: "john.doe@example.com",
   avatar: "",

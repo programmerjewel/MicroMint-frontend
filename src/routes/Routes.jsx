@@ -1,6 +1,9 @@
 
 import DashboardLayout from '@/layouts/dashboard/DashboardLayout';
 import MainLayout from '@/layouts/public/MainLayout';
+import AdminHomePage from '@/pages/dashboard/admin/AdminHomePage';
+import ManageTasksPage from '@/pages/dashboard/admin/ManageTasksPage';
+import ManageUsers from '@/pages/dashboard/admin/ManageUsersPage';
 import AddTasksPage from '@/pages/dashboard/buyer/AddTasksPage';
 import BuyerHomePage from '@/pages/dashboard/buyer/BuyerHomePage';
 import PaymentHistoryPage from '@/pages/dashboard/buyer/PaymentHistoryPage';
@@ -70,6 +73,18 @@ const Routes= createBrowserRouter([
       {
         path: 'payments',
         element: <PaymentHistoryPage/>,
+      },
+      {
+        path: 'admin-home',
+        element: <AdminHomePage/>,
+      },
+      {
+        path: 'manage-users',
+        element: <ManageUsers/>,
+      },
+      {
+        path: 'manage-tasks',
+        element: <ManageTasksPage/>,
       }
     ]
   }
