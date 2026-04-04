@@ -24,6 +24,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 import {
@@ -69,7 +70,7 @@ const user = {
 
 const DashboardSidebar = () => {
   const menuItems = menuItemsArr[user.role] || [];
-
+    const { setOpenMobile } = useSidebar();
   const handleLogout = () => {
     // Handle logout logic here
     console.log("Logging out...");
@@ -92,7 +93,7 @@ const DashboardSidebar = () => {
               return (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url} className="flex items-center gap-3">
+                    <Link to={item.url} className="flex items-center gap-3" onClick={() => setOpenMobile(false)}>
                       <Icon className="h-4 w-4" />
                       <span>{item.title}</span>
                     </Link>
@@ -148,7 +149,7 @@ const DashboardSidebar = () => {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/profile" className="flex items-center gap-2 cursor-pointer">
+                  <Link to="/profile" className="flex items-center gap-2 cursor-pointer" onClick={() => setOpenMobile(false)}>
                     <User className="h-4 w-4" />
                     <span>Profile</span>
                   </Link>

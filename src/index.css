@@ -5,6 +5,16 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Brand Color Utilities */
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-accent: var(--brand-accent);
+  
+  /* Brand Text Utilities - Use these for readability */
+  --color-brand-text: var(--brand-text);
+  --color-brand-text-muted: var(--brand-text-muted);
+
+  /* Shadcn UI System Mappings */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -12,6 +22,7 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -46,15 +57,27 @@
 }
 
 :root {
+  /* Brand Definitions */
+  --brand-primary: hsl(237 100% 48%);      /* Electric Indigo */
+  --brand-secondary: hsl(153 100% 50%); 
+  --brand-accent: hsl(51 100% 50%);
+
+  /* Text Readability for Light Mode */
+  --brand-text: #00033d;         /* Deep Indigo - Use for Headings */
+  --brand-text-muted: hsl(237 30% 35%);    /* Desaturated Indigo - Use for Body Text */
+
+  /* Shadcn Base */
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
+  --primary: var(--brand-primary);
+  --primary-foreground: oklch(0.985 0 0);
+  
+  /* Rest of Shadcn vars... (keeping your OKLCH values) */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -81,14 +104,23 @@
 }
 
 .dark {
+  /* Brand Colors for Dark Mode */
+  --brand-primary: hsl(237 100% 70%);      /* Lightened Indigo for visibility */
+  
+  /* Text Readability for Dark Mode */
+  --brand-text: hsl(237 100% 95%);         /* Off-white Lavender */
+  --brand-text-muted: hsl(237 20% 75%);    /* Muted Lavender */
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
+  --primary: var(--brand-primary);
+  --primary-foreground: oklch(0.205 0 0);
+  
+  /* Rest of Dark Shadcn vars... */
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -119,9 +151,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-['Google_Sans_Flex',sans-serif];
+    overflow-y: scroll;
   }
-}
-body{
-  font-family: 'Google Sans Flex', sans-serif;
 }

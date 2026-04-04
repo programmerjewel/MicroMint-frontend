@@ -2,14 +2,12 @@ import React from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import useAuth from "@/hooks/useAuth";
 
 const DashboardHeader = () => {
-  const user = {
-    name: "Mohammad Ali",
-    role: "Admin",
-    coins: 120,
-    image: "https://i.pravatar.cc/500?u=kkk@pravatar.com",
-  };
+ 
+  const {user} = useAuth();
+  console.log(user)
 
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 bg-white">
@@ -19,7 +17,6 @@ const DashboardHeader = () => {
 
         {/* Vertical divider */}
         <div className="h-4 w-px bg-gray-600"></div>
-
         <div className="font-bold text-xl px-2">MicroMint</div>
       </div>
 
@@ -34,15 +31,16 @@ const DashboardHeader = () => {
           </span>
 
           <span className="text-gray-500 text-xs">
-            {user.role} | {user.name}
+            {user.role} | {user?.displayName}
           </span>
         </div>
 
         {/* User Image */}
         <div className="px-4">
           <img
-            src={user.image}
+            src={user?.photoURL}
             alt="User"
+            referrerPolicy="no-referrer"
             className="w-8 h-8 rounded-full object-cover"
           />
         </div>
