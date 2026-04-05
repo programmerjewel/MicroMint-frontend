@@ -1,157 +1,204 @@
-import { useState, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Link } from "react-router-dom"
+  FieldSeparator,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
+import { uploadImage } from "@/utils/uploadImage";
+import { FcGoogle } from "react-icons/fc";
 
-export function SignupForm({
-  ...props
-}) {
-  const [previewUrl, setPreviewUrl] = useState(null)
-  const [fileName, setFileName] = useState("")
-  const fileInputRef = useRef(null)
+export function SignupForm({ ...props }) {
+  const [preview, setPreview] = useState(null);
+  const [fileName, setFileName] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        alert("File size must be less than 2MB")
-        e.target.value = ""
-        return
-      }
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setPreviewUrl(e.target.result)
-      }
-      reader.readAsDataURL(file)
-      setFileName(file.name)
+  //access auth
+  const { createUser, updateUser, loginWithGoogle } = useAuth();
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const photoURL = await uploadImage(data.profilePicture[0]);
+
+      //new user in firebase
+      await createUser(data.email, data.password);
+
+      // Update Firebase Profile with Name and Photo
+      await updateUser(data.name, photoURL);
+
+      //navigate to home after register
+      navigate("/");
+    } catch (error) {
+      console.error("Signup Error:", error.message);
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+    // console.log(data)
+    // console.log(data.profilePicture[0])
+  };
+
+  const onGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+      navigate("/");
+    } catch (error) {
+      console.error("Google Login Error:", error.message);
+    }
+  };
+
+  const handlePreview = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+      setFileName(file.name);
+    }
+  };
 
   return (
-    <Card {...props}>
+    <Card {...props} className="mx-auto max-w-md">
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>
-          Enter your information below to create your account
-        </CardDescription>
+        <CardTitle className="font-bold">Create Account</CardTitle>
       </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* PROFILE PICTURE SECTION */}
+          <div className="flex flex-col items-center gap-3 py-2">
+            <div className="relative h-20 w-20 group">
+              <div className="h-full w-full rounded-md border-2 border-dashed border-muted-foreground/30 flex items-center justify-center overflow-hidden bg-muted">
+                {preview ? (
+                  <img
+                    src={preview}
+                    className="h-full w-full object-cover"
+                    alt="Avatar"
+                  />
+                ) : (
+                  <span className="text-xs text-muted-foreground uppercase">
+                    Upload
+                  </span>
+                )}
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer z-20"
+                {...register("profilePicture", {
+                  required: "Required",
+                  onChange: handlePreview,
+                })}
+              />
+            </div>
+            <p className="text-xs font-mono text-muted-foreground truncate max-w-37.5">
+              {fileName || "NO FILE SELECTED"}
+            </p>
+          </div>
+
           <FieldGroup>
             <Field>
-              <FieldLabel>Profile Picture</FieldLabel>
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center overflow-hidden border-2 border-dashed border-muted-foreground/25">
-                  {previewUrl ? (
-                    <img
-                      src={previewUrl}
-                      alt="Profile Preview"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <svg
-                      className="w-8 h-8 text-muted-foreground"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <Input
-                    ref={fileInputRef}
-                    id="profile-picture"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    Upload Photo
-                  </Button>
-                  <FieldDescription>
-                    {fileName || "JPG, PNG or GIF. Max 2MB."}
-                  </FieldDescription>
-                </div>
+              <FieldLabel>Full Name</FieldLabel>
+              <Input {...register("name", { required: "Name is required" })} />
+            </Field>
+
+            <Field>
+              <FieldLabel>Email</FieldLabel>
+              <Input
+                type="email"
+                {...register("email", { required: "Email is required" })}
+              />
+            </Field>
+
+            <Field>
+              <FieldLabel>Password</FieldLabel>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"} // ✅ toggled
+                  className="pr-10"
+                  {...register("password", { required: true, minLength: 8 })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </Field>
+
             <Field>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input id="name" type="text" placeholder="John Doe" required />
+              <FieldLabel>Confirm Password</FieldLabel>
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  className="pr-10"
+                  {...register("confirmPassword", {
+                    validate: (val) =>
+                      val === getValues("password") || "No match",
+                  })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={16} />
+                  ) : (
+                    <Eye size={16} />
+                  )}
+                </button>
+              </div>
             </Field>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" placeholder="m@example.com" required />
-              <FieldDescription>
-                We&apos;ll use this to contact you. We will not share your email
-                with anyone else.
-              </FieldDescription>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
-              <FieldDescription>
-                Must be at least 8 characters long.
-              </FieldDescription>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="confirm-password">
-                Confirm Password
-              </FieldLabel>
-              <Input id="confirm-password" type="password" required />
-              <FieldDescription>Please confirm your password.</FieldDescription>
-            </Field>
-            <FieldGroup>
-              <Field>
-                <Button type="submit">Create Account</Button>
-                <Button variant="outline" type="button">
-                  Sign up with Google
-                </Button>
-                <FieldDescription className="px-6 text-center">
-                  Already have an account? <Link to='/login'>Log In</Link>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
+
+            {errors.confirmPassword && (
+              <p className="text-xs text-destructive">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </FieldGroup>
+
+          <Field>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Processing..." : "Create Account"}
+            </Button>
+          </Field>
+          <FieldSeparator className='my-4'>Or continue with</FieldSeparator>
+          <Field>
+            <Button variant="outline" type="button" onClick={onGoogleLogin}>
+              <FcGoogle />
+              Register with Google
+            </Button>
+            <FieldDescription className="text-center">
+              Have an account?{" "}
+              <Link to="/login" className="underline">
+                Log In
+              </Link>
+            </FieldDescription>
+          </Field>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
