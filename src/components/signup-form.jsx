@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form"; // Import Controller
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +15,16 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import { uploadImage } from "@/utils/uploadImage";
 import { FcGoogle } from "react-icons/fc";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import axios from "axios";
 
 export function SignupForm({ ...props }) {
   const [preview, setPreview] = useState(null);
@@ -22,7 +32,6 @@ export function SignupForm({ ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  //access auth
   const { createUser, updateUser, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,29 +40,38 @@ export function SignupForm({ ...props }) {
     register,
     handleSubmit,
     getValues,
+    control,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
+
       const photoURL = await uploadImage(data.profilePicture[0]);
 
-      //new user in firebase
+      // Create user
       await createUser(data.email, data.password);
 
-      // Update Firebase Profile with Name and Photo
+      // Update Profile
       await updateUser(data.name, photoURL);
 
-      //navigate to home after register
+      //add role on db save with the SPECIFIC role
+        const userInfo = {
+        name: data.name,
+        image: photoURL,
+        email: data.email,
+        role: data.role, 
+      };
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/users/${data.email}`, userInfo);
       navigate("/");
+
     } catch (error) {
       console.error("Signup Error:", error.message);
     } finally {
       setIsSubmitting(false);
     }
-    // console.log(data)
-    // console.log(data.profilePicture[0])
   };
 
   const onGoogleLogin = async () => {
@@ -73,6 +91,11 @@ export function SignupForm({ ...props }) {
     }
   };
 
+  const items = [
+    { label: "Worker", value: "worker" },
+    { label: "Buyer", value: "buyer" },
+  ];
+
   return (
     <Card {...props} className="mx-auto max-w-md">
       <CardHeader>
@@ -80,7 +103,7 @@ export function SignupForm({ ...props }) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* PROFILE PICTURE SECTION */}
+          
           <div className="flex flex-col items-center gap-3 py-2">
             <div className="relative h-20 w-20 group">
               <div className="h-full w-full rounded-md border-2 border-dashed border-muted-foreground/30 flex items-center justify-center overflow-hidden bg-muted">
@@ -126,18 +149,49 @@ export function SignupForm({ ...props }) {
             </Field>
 
             <Field>
+              <FieldLabel>Add a Role</FieldLabel>
+              <Controller
+                name="role"
+                control={control}
+                rules={{ required: "Please select a role" }}
+                render={({ field }) => (
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Roles</SelectLabel>
+                        {items.map((item) => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.role && (
+                <p className="text-xs text-destructive">{errors.role.message}</p>
+              )}
+            </Field>
+
+            <Field>
               <FieldLabel>Password</FieldLabel>
               <div className="relative">
                 <Input
-                  type={showPassword ? "text" : "password"} // ✅ toggled
+                  type={showPassword ? "text" : "password"}
                   className="pr-10"
                   {...register("password", { required: true, minLength: 8 })}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -158,16 +212,9 @@ export function SignupForm({ ...props }) {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label={
-                    showConfirmPassword ? "Hide password" : "Show password"
-                  }
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff size={16} />
-                  ) : (
-                    <Eye size={16} />
-                  )}
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </Field>
@@ -180,23 +227,24 @@ export function SignupForm({ ...props }) {
           </FieldGroup>
 
           <Field>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Processing..." : "Create Account"}
             </Button>
           </Field>
-          <FieldSeparator className='my-4'>Or continue with</FieldSeparator>
-          <Field>
-            <Button variant="outline" type="button" onClick={onGoogleLogin}>
-              <FcGoogle />
-              Register with Google
-            </Button>
-            <FieldDescription className="text-center">
-              Have an account?{" "}
-              <Link to="/login" className="underline">
-                Log In
-              </Link>
-            </FieldDescription>
-          </Field>
+
+          <FieldSeparator className="my-4">Or continue with</FieldSeparator>
+          
+          <Button variant="outline" type="button" onClick={onGoogleLogin} className="w-full">
+            <FcGoogle />
+            Register with Google
+          </Button>
+
+          <FieldDescription className="text-center">
+            Have an account?{" "}
+            <Link to="/login" className="underline">
+              Log In
+            </Link>
+          </FieldDescription>
         </form>
       </CardContent>
     </Card>

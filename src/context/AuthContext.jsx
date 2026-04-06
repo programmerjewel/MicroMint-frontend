@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import auth from "@/firebase/firebase.init";
 import axiosInstance from "@/lib/axios";
+import axios from "axios";
 
 const AuthContext = createContext(null);
 
@@ -34,15 +35,24 @@ export const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  const updateUser = (name, image) => {
-    return updateProfile(auth.currentUser, { displayName: name, photoURL: image });
+  const updateUser = async (name, image) => {
+    if (!auth.currentUser) return;
+    await updateProfile(auth.currentUser, { 
+        displayName: name, 
+        photoURL: image 
+    });
+    
+    // Crucial: Manually update local state with the new values
+    const updatedUser = { ...auth.currentUser, displayName: name, photoURL: image };
+    setUser(updatedUser);
+    return updatedUser;
   };
 
   const logoutUser = async () => {
     setLoading(true);
     try {
       await signOut(auth);
-      await axiosInstance.post("/logout"); // clears the HttpOnly cookie
+      await axiosInstance.post("/logout"); 
       setUser(null);
     } catch (error) {
       console.error("Logout error:", error);
@@ -53,16 +63,22 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser?.email) {
-        setUser(currentUser);
+      setUser(currentUser);
+      if (currentUser?.email && currentUser?.displayName) {
         try {
+          const userInfo = {
+            name: currentUser.displayName,
+            image: currentUser.photoURL,
+            email: currentUser.email,
+          };
+
+          await axios.post(`${import.meta.env.VITE_API_URL}/users/${currentUser.email}`, userInfo);
           await axiosInstance.post("/jwt", { email: currentUser.email });
         } catch (err) {
-          console.error("JWT issuance error:", err);
+          console.error("Auth Sync Error:", err);
         }
-      } else {
-        setUser(null);
       }
+
       setLoading(false);
     });
 
