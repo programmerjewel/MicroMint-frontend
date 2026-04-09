@@ -9,8 +9,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import auth from "@/firebase/firebase.init";
-import axiosInstance from "@/lib/axios";
-import axios from "axios";
+import { axiosSecure } from "@/hooks/useAxiosSecure";
 
 const AuthContext = createContext(null);
 
@@ -52,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       await signOut(auth);
-      await axiosInstance.post("/logout"); 
+      await axiosSecure.post("/logout"); 
       setUser(null);
     } catch (error) {
       console.error("Logout error:", error);
@@ -72,8 +71,8 @@ export const AuthProvider = ({ children }) => {
             email: currentUser.email,
           };
 
-          await axios.post(`${import.meta.env.VITE_API_URL}/users/${currentUser.email}`, userInfo);
-          await axiosInstance.post("/jwt", { email: currentUser.email });
+          await axiosSecure.post(`/users/${currentUser.email}`, userInfo);
+          await axiosSecure.post("/jwt", { email: currentUser.email });
         } catch (err) {
           console.error("Auth Sync Error:", err);
         }
