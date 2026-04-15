@@ -4,7 +4,8 @@ import MainLayout from '@/layouts/public/MainLayout';
 import AdminHomePage from '@/pages/dashboard/admin/AdminHomePage';
 import ManageTasksPage from '@/pages/dashboard/admin/ManageTasksPage';
 import ManageUsers from '@/pages/dashboard/admin/ManageUsersPage';
-import AddTasksPage from '@/pages/dashboard/buyer/AddTasksPage';
+import AddTaskPage from '@/pages/dashboard/buyer/AddTasksPage';
+import AllTasksPage from '@/pages/dashboard/buyer/AllTasksPage';
 import BuyerHomePage from '@/pages/dashboard/buyer/BuyerHomePage';
 import PaymentHistoryPage from '@/pages/dashboard/buyer/PaymentHistoryPage';
 import PurchaseCoinsPage from '@/pages/dashboard/buyer/PurchaseCoinsPage';
@@ -68,8 +69,12 @@ const Routes= createBrowserRouter([
         element: <BuyerHomePage/>,
       },
       {
-        path: 'add-tasks',
-        element: <AddTasksPage/>
+        path: 'add-task',
+        element: <AddTaskPage/>
+      },
+      {
+        path: 'tasks',
+        element: <AllTasksPage/>,
       },
       {
         path: 'purchase-coins',

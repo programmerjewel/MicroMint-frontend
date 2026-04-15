@@ -1,4 +1,3 @@
-import React from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import {
   Dialog,
@@ -22,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Eye, CheckCircle, XCircle } from "lucide-react";
 
-const AddedTaskTableRow = ({ submission, onApprove, onReject }) => {
+const PendingSubmissionTableRow = ({ submission, onApprove, onReject }) => {
   return (
     <TableRow>
       <TableCell className="font-medium">{submission.worker_name}</TableCell>
@@ -112,4 +111,4 @@ const AddedTaskTableRow = ({ submission, onApprove, onReject }) => {
   );
 };
 
-export default AddedTaskTableRow;
+export default PendingSubmissionTableRow;

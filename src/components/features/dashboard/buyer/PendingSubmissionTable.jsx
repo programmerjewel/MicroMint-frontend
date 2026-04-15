@@ -7,9 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import AddedTaskTableRow from "./AddedTaskTableRow";
+import PendingSubmissionTableRow from "./PendingSubmissionTableRow";
 
-const AddedTaskTable = ({ submissions = [], onApprove, onReject }) => {
+const PendingSubmissionTable = ({ submissions = [], onApprove, onReject }) => {
   return (
     <div className="rounded-md border bg-white shadow-sm">
       <Table>
@@ -30,7 +30,7 @@ const AddedTaskTable = ({ submissions = [], onApprove, onReject }) => {
             </TableRow>
           ) : (
             submissions.map((submission) => (
-              <AddedTaskTableRow 
+              <PendingSubmissionTableRow 
                 key={submission._id} 
                 submission={submission} 
                 onApprove={onApprove}
@@ -44,4 +44,4 @@ const AddedTaskTable = ({ submissions = [], onApprove, onReject }) => {
   );
 };
 
-export default AddedTaskTable;
+export default PendingSubmissionTable;

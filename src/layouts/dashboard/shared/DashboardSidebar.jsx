@@ -9,10 +9,9 @@ import {
   Users,
   ClipboardList,
   ChevronUp,
-  User,
   Settings,
   LogOut,
-  HelpCircle,
+  HelpCircle,Boxes
 } from "lucide-react";
 
 import {
@@ -39,6 +38,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Link } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
 
 const menuItemsArr = {
   worker: [
@@ -49,7 +49,8 @@ const menuItemsArr = {
   ],
   buyer: [
     { title: "Home", url: "buyer-home", icon: Home },
-    { title: "Add New Tasks", url: "add-tasks", icon: PackagePlus },
+    { title: "Add New Task", url: "add-task", icon: PackagePlus },
+    { title: "All Tasks", url: "tasks", icon: Boxes },
     { title: "Purchase Coin", url: "purchase-coins", icon: Coins },
     { title: "Payment History", url: "payments", icon: CreditCard },
   ],
@@ -61,20 +62,24 @@ const menuItemsArr = {
 };
 
 // 👇 dummy user data (replace later with backend/AuthContext)
-const user = {
+const dummyUser = {
   role: "worker", // worker | buyer | admin
   name: "John Doe",
   email: "john.doe@example.com",
   avatar: "",
 };
 
+
 const DashboardSidebar = () => {
-  const menuItems = menuItemsArr[user.role] || [];
+  const menuItems = menuItemsArr[dummyUser.role] || [];
     const { setOpenMobile } = useSidebar();
   const handleLogout = () => {
     // Handle logout logic here
     console.log("Logging out...");
   };
+
+  //import user from auth
+  const {user} = useAuth();
 
   return (
     <Sidebar>
@@ -117,9 +122,9 @@ const DashboardSidebar = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarImage src={user?.photoURL} alt={user?.displayName} />
                       <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                        {user.name
+                        {user?.displayName
                           .split(" ")
                           .map((n) => n[0])
                           .join("")
@@ -127,9 +132,9 @@ const DashboardSidebar = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start text-left">
-                      <span className="text-sm font-medium">{user.name}</span>
+                      <span className="text-sm font-medium">{user?.displayName}</span>
                       <span className="text-xs text-muted-foreground">
-                        {user.email}
+                        {user?.email}
                       </span>
                     </div>
                   </div>
@@ -143,14 +148,14 @@ const DashboardSidebar = () => {
               >
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                    <p className="text-sm font-medium">{user?.displayName}</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/profile" className="flex items-center gap-2 cursor-pointer" onClick={() => setOpenMobile(false)}>
-                    <User className="h-4 w-4" />
+                    <dummyUser className="h-4 w-4" />
                     <span>Profile</span>
                   </Link>
                 </DropdownMenuItem>

@@ -7,7 +7,7 @@ import useAuth from "@/hooks/useAuth";
 const DashboardHeader = () => {
  
   const {user} = useAuth();
-  console.log(user)
+  // console.log(user)
 
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 bg-white">

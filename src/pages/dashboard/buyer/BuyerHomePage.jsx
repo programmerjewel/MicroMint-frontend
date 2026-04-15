@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { toast, Toaster } from "sonner"; 
-import AddedTaskTable from '@/components/features/dashboard/buyer/AddedTaskTable';
 import BuyerStats from '@/components/features/dashboard/buyer/BuyerStats';
 import DashboardSectionHeader from '@/components/ui/dashboard-section-header';
+import PendingSubmissionTable from '@/components/features/dashboard/buyer/PendingSubmissionTable';
 
 const BuyerHomePage = () => {
  
@@ -66,7 +66,7 @@ const BuyerHomePage = () => {
           </span>
         </div>
         
-        <AddedTaskTable 
+        <PendingSubmissionTable
           submissions={data} 
           onApprove={handleApprove} 
           onReject={handleReject} 
