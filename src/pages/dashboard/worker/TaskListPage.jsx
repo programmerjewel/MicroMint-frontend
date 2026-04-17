@@ -14,9 +14,7 @@ const TaskListPage = () => {
       return data
     }
   })
-  if (tasks.length > 0) {
-      console.log("Fetched Tasks:", tasks);
-    }
+  
   if(isLoading) return <Loading variant="fullscreen" text="Waiting..." size="xl" />
 
   return (

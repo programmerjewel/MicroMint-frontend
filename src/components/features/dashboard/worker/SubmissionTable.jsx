@@ -6,16 +6,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import SubmissionTableRow from "./SubmissionTableRow";
-const SubmissionTable = ({submissions}) => {
+const SubmissionTable = ({submissions, onCancel}) => {
   return (
     <div className="rounded-xs border mt-4">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Task Title</TableHead>
-            <TableHead>Buyer Name</TableHead>
-            <TableHead>Payable Amount</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className='font-semibold'>Task Title</TableHead>
+            <TableHead className='font-semibold'>Buyer Name</TableHead>
+            <TableHead className='font-semibold'>Payable Amount</TableHead>
+            <TableHead className='font-semibold'>Status</TableHead>
+            <TableHead className='font-semibold'>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -23,6 +24,7 @@ const SubmissionTable = ({submissions}) => {
             <SubmissionTableRow
               key={submission._id}
               submission={submission}
+              onCancel={onCancel}
             />
           ))}
         </TableBody>

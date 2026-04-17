@@ -1,66 +1,38 @@
 import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
 import SubmissionTable from "./SubmissionTable";
+import useAuth from "@/hooks/useAuth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import Loading from "@/components/shared/Loading";
+import { toast } from "sonner";
 
 const MySubmissions = () => {
-   // Filter approved submissions for the table
-    const submissions = [
-  {
-    _id: "1",
-    task_title: "Write a product review",
-    payable_amount: 5.00,
-    buyer_name: "Alice Johnson",
-    status: "approved",
-  },
-  {
-    _id: "2",
-    task_title: "Complete a survey",
-    payable_amount: 2.50,
-    buyer_name: "Bob Smith",
-    status: "pending",
-  },
-  {
-    _id: "3",
-    task_title: "Test mobile application",
-    payable_amount: 15.00,
-    buyer_name: "Charlie Brown",
-    status: "approved",
-  },
-  {
-    _id: "4",
-    task_title: "Transcribe audio file",
-    payable_amount: 8.00,
-    buyer_name: "Diana Ross",
-    status: "rejected",
-  },
-  {
-    _id: "5",
-    task_title: "Data entry task",
-    payable_amount: 3.50,
-    buyer_name: "Edward Norton",
-    status: "approved",
-  },
-  {
-    _id: "6",
-    task_title: "Logo feedback",
-    payable_amount: 4.00,
-    buyer_name: "Fiona Apple",
-    status: "pending",
-  },
-  {
-    _id: "7",
-    task_title: "Website usability test",
-    payable_amount: 12.00,
-    buyer_name: "George Lucas",
-    status: "approved",
-  },
-  {
-    _id: "8",
-    task_title: "Social media engagement",
-    payable_amount: 6.00,
-    buyer_name: "Hannah Montana",
-    status: "pending",
-  },
-];
+  const {user} = useAuth();
+  const queryClient = useQueryClient();
+
+  //fetch submitted-task data 
+  const { data: submissions = [], isLoading} = useQuery({
+    queryKey: ['submissions', user?.email],
+    queryFn: async ()=>{
+      const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/submitted-task/${user?.email}`)
+      return data
+    }
+  })
+  console.log(submissions)
+
+  //handle submit cancellation
+  const {mutateAsync: cancelSubmission} = useMutation({
+    mutationFn: async(id) =>{
+      return await axios.delete(`${import.meta.env.VITE_API_URL}/submitted-task/${id}`)
+    },
+    onSuccess: ()=>{
+      queryClient.invalidateQueries(['submissions', user?.email]);
+      toast.success("Submission cancel successfully");
+    }
+  })
+
+  if(isLoading) return <Loading variant="fullscreen" text="Fetching task..." size="xl"/>
+
   return (
     <section>
       <DashboardSectionHeader title='Worker Submissions'/>
@@ -74,7 +46,7 @@ const MySubmissions = () => {
             </p>
           </div>
         ) : (
-          <SubmissionTable submissions={submissions} />
+          <SubmissionTable submissions={submissions} onCancel={cancelSubmission} />
         )}
       </div>
     </section>
