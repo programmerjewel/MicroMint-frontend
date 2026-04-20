@@ -40,7 +40,12 @@ export const AuthProvider = ({ children }) => {
         displayName: name, 
         photoURL: image 
     });
-    
+    // 2. Sync with MongoDB immediately using PUT
+    const userInfo = {
+      name: name,
+      image: image,
+    };
+    await axiosSecure.patch(`/users/${auth.currentUser.email}`, userInfo);
     // Crucial: Manually update local state with the new values
     const updatedUser = { ...auth.currentUser, displayName: name, photoURL: image };
     setUser(updatedUser);
@@ -63,16 +68,18 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      if (currentUser?.email && currentUser?.displayName) {
+      if (currentUser?.email) {
         try {
+          await axiosSecure.post("/jwt", { email: currentUser.email });
+
           const userInfo = {
             name: currentUser.displayName,
             image: currentUser.photoURL,
             email: currentUser.email,
           };
 
-          await axiosSecure.post(`/users/${currentUser.email}`, userInfo);
-          await axiosSecure.post("/jwt", { email: currentUser.email });
+          await axiosSecure.post(`/users`, userInfo);
+          
         } catch (err) {
           console.error("Auth Sync Error:", err);
         }
