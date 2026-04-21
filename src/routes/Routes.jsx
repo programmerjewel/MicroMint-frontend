@@ -15,6 +15,7 @@ import WorkerHomePage from '@/pages/dashboard/worker/WorkerHomePage';
 import WorkerSubmissionPage from '@/pages/dashboard/worker/WorkerSubmissionPage';
 import WorkerWithdrawalPage from '@/pages/dashboard/worker/WorkerWithdrawalPage';
 import LoginPage from '@/pages/public/auth/LoginPage';
+import ProfilePage from '@/pages/public/auth/ProfilePage';
 import RegisterPage from '@/pages/public/auth/RegisterPage';
 import ErrorPage from '@/pages/public/ErrorPage';
 import HomePage from '@/pages/public/Home';
@@ -29,6 +30,10 @@ const Routes= createBrowserRouter([
       {
         path: '/',
         element: <HomePage/>,
+      },
+      {
+        path: '/profile',
+        element:<ProfilePage/>,
       }
     ]
   },
@@ -44,6 +49,10 @@ const Routes= createBrowserRouter([
     path: '/dashboard',
     element: <DashboardLayout/>,
     children: [
+      {
+        path: 'profile',
+        element: <ProfilePage/>,
+      },
       {
         path: 'worker-home',
         element: <WorkerHomePage/>,
