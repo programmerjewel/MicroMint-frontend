@@ -20,15 +20,15 @@ const ManageTasksTableRow = ({ task, onDelete }) => {
       <TableCell className="font-medium">
         <div className="flex flex-col">
           <span>{task.task_title}</span>
-          <span className="text-[10px] text-muted-foreground uppercase">ID: {task._id}</span>
+          <span className="text-xs text-muted-foreground font-light uppercase italic">ID: {task._id}</span>
         </div>
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <User className="h-3 w-3 text-muted-foreground" />
           <div className="flex flex-col text-xs">
-            <span>{task.buyer_name}</span>
-            <span className="text-muted-foreground">{task.buyer_email}</span>
+            <span>{task.buyer.name}</span>
+            <span className="text-muted-foreground">{task.buyer.email}</span>
           </div>
         </div>
       </TableCell>

@@ -72,13 +72,17 @@ export default function UserProfileCard({ user, onUpdate }) {
     setIsConfirming(true);
     try {
       const data = getValues();
+      // Ensure we have a valid string fallback for photoURL
       const photoURL = selectedFile
         ? await uploadImage(selectedFile)
-        : user.photoURL;
+        : (user.photoURL || "");
+        
       await onUpdate({ ...data, photoURL });
       setShowConfirm(false);
       setSelectedFile(null);
       setPreview(null);
+    } catch {
+       // Error is handled by the mutation in ProfilePage
     } finally {
       setIsConfirming(false);
     }
@@ -86,10 +90,9 @@ export default function UserProfileCard({ user, onUpdate }) {
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center p-4">
-      {/* ── Profile Card ── */}
       <Card className="w-full max-w-md overflow-hidden shadow-lg border-0 pt-0">
         <CardHeader className="p-0">
-          <div className="h-35 bg-primary/85" />
+          <div className="h-32 bg-zinc-900" />
         </CardHeader>
         <CardContent className="px-6 pb-6">
           <div className="flex justify-between items-end -mt-10 mb-5">
@@ -119,20 +122,18 @@ export default function UserProfileCard({ user, onUpdate }) {
           </p>
 
           {isPending && (
-            <Card className="bg-amber-30 border-amber-100 shadow-none">
-              <CardContent className="flex items-center justify-center gap-2.5">
-                <Clock size={15} className="text-amber-500 mt-0.5 shrink-0" />
-                <p className="text-xs text-amber-600 leading-relaxed">
-                  Switch to <b>{user.pendingRequest.requestedRole}</b> is
-                  pending admin approval.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 flex items-center gap-2.5">
+              <Clock size={15} className="text-amber-500 shrink-0" />
+              <p className="text-xs text-amber-700 leading-relaxed">
+                Switch to <b>{user.pendingRequest.requestedRole}</b> is
+                pending admin approval.
+              </p>
+            </div>
           )}
         </CardContent>
       </Card>
 
-      {/* ── Edit Modal ── */}
+      {/* Edit Modal */}
       <Dialog open={showEdit} onOpenChange={setShowEdit}>
         <DialogContent className="sm:max-w-md rounded-2xl">
           <DialogHeader>
@@ -142,11 +143,7 @@ export default function UserProfileCard({ user, onUpdate }) {
             </DialogDescription>
           </DialogHeader>
 
-          <form
-            onSubmit={handleSubmit(onReviewSubmit)}
-            className="space-y-4 mt-2"
-          >
-            {/* Avatar picker */}
+          <form onSubmit={handleSubmit(onReviewSubmit)} className="space-y-4 mt-2">
             <div className="flex justify-center py-1">
               <img
                 src={preview || user.photoURL}
@@ -163,96 +160,63 @@ export default function UserProfileCard({ user, onUpdate }) {
               />
             </div>
 
-            <Card className="border shadow-none">
-              <CardContent className="p-4 space-y-4">
-                {/* Full Name - Visible for all */}
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold text-zinc-500 uppercase">Full Name</Label>
+                <Input {...register("name", { required: true })} className="rounded-lg" />
+              </div>
+
+              {user.role !== "admin" && (
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
-                    Full Name
-                  </Label>
-                  <Input
-                    {...register("name", { required: true })}
-                    className="rounded-lg"
-                  />
-                </div>
-
-                {/* Account Role - ONLY visible if NOT admin */}
-                {user.role !== "admin" && (
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
-                      Account Role
-                    </Label>
-                    <div className="relative">
-                      <select
-                        {...register("role")}
-                        disabled={isPending}
-                        className="w-full h-10 px-3 rounded-lg border border-zinc-200 bg-white text-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <option value="worker">Worker</option>
-                        <option value="buyer">Buyer</option>
-                      </select>
-                      {isPending && (
-                        <Lock
-                          className="absolute right-3 top-3 text-zinc-400"
-                          size={14}
-                        />
-                      )}
-                    </div>
+                  <Label className="text-xs font-semibold text-zinc-500 uppercase">Account Role</Label>
+                  <div className="relative">
+                    <select
+                      {...register("role")}
+                      disabled={isPending}
+                      className="w-full h-10 px-3 rounded-lg border border-zinc-200 bg-white text-sm appearance-none disabled:opacity-50"
+                    >
+                      <option value="worker">Worker</option>
+                      <option value="buyer">Buyer</option>
+                    </select>
+                    {isPending && <Lock className="absolute right-3 top-3 text-zinc-400" size={14} />}
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </div>
+              )}
+            </div>
 
-            <Button
-              type="submit"
-              className="w-full rounded-xl bg-zinc-900 hover:bg-zinc-700"
-            >
+            <Button type="submit" className="w-full rounded-xl bg-zinc-900">
               Review Changes
             </Button>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* ── Confirm Modal ── */}
+      {/* Confirm Modal */}
       <Dialog open={showConfirm} onOpenChange={setShowConfirm}>
         <DialogContent className="sm:max-w-sm rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-center">Confirm Updates</DialogTitle>
-            <DialogDescription className="text-center">
-              Review your changes before saving.
-            </DialogDescription>
           </DialogHeader>
 
-          <Card className="border shadow-none my-2">
-            <CardContent className="p-3 space-y-2">
-              {changes.map((c, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center text-[11px] bg-zinc-50 p-3 rounded-lg border"
-                >
-                  <span className="font-bold text-zinc-400 uppercase tracking-wide">
-                    {c.label}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="line-through text-zinc-300">{c.from}</span>
-                    <ArrowRight size={10} className="text-zinc-300" />
-                    <span className="font-bold text-zinc-700">{c.to}</span>
-                  </div>
+          <div className="space-y-2 my-2">
+            {changes.map((c, i) => (
+              <div key={i} className="flex justify-between items-center text-[11px] bg-zinc-50 p-3 rounded-lg border">
+                <span className="font-bold text-zinc-400 uppercase">{c.label}</span>
+                <div className="flex items-center gap-2">
+                  <span className="line-through text-zinc-300">{c.from}</span>
+                  <ArrowRight size={10} className="text-zinc-300" />
+                  <span className="font-bold text-zinc-700">{c.to}</span>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
+              </div>
+            ))}
+          </div>
 
           <Button
             onClick={handleConfirm}
             disabled={isConfirming}
-            className="w-full h-11 rounded-xl bg-zinc-900 hover:bg-zinc-700 font-bold"
+            className="w-full h-11 rounded-xl bg-zinc-900 font-bold"
           >
-            {isConfirming ? (
-              <Loader2 className="animate-spin" size={16} />
-            ) : (
-              "Confirm & Save"
-            )}
+            {isConfirming ? <Loader2 className="animate-spin" size={16} /> : "Confirm & Save"}
           </Button>
         </DialogContent>
       </Dialog>

@@ -3,11 +3,11 @@ import useAuth from "./useAuth";
 import { axiosSecure } from "./useAxiosSecure";
 
 const useRole = () => {
-  const { user, loading } = useAuth();
+  const { user, loading:authLoading } = useAuth();
 
-  const { data, isLoading: isRoleLoading, refetch } = useQuery({
+  const { data, isLoading: isQueryLoading, refetch } = useQuery({
     queryKey: ['userRole', user?.email],
-    enabled: !!user?.email && !loading,
+    enabled: !!user?.email && !authLoading,
     queryFn: async () => {
       const userRes = await axiosSecure.get(`/users/${user.email}`);
 
@@ -23,14 +23,16 @@ const useRole = () => {
       }
 
       return {
-        role: userRes.data?.role || 'worker',
+        role: userRes.data?.role,
         pendingRequest,
       };
     },
   });
 
+  const isRoleLoading = authLoading || isQueryLoading;
+
   return {
-    role: data?.role || 'worker',
+    role: isRoleLoading ? undefined : (data?.role || 'worker'),
     pendingRequest: data?.pendingRequest ?? null,
     isRoleLoading,
     refetch,

@@ -3,14 +3,14 @@ import TasksContainer from "@/components/features/dashboard/worker/TasksContaine
 import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/shared/Loading";
-import axios from "axios";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const TaskListPage = () => {
-  
+  const axiosSecure = useAxiosSecure();
   const {data: tasks = [], isLoading} = useQuery({
     queryKey: ['tasks'],
     queryFn: async () =>{
-      const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/tasks`)
+      const {data} = await axiosSecure.get(`${import.meta.env.VITE_API_URL}/tasks`)
       return data
     }
   })

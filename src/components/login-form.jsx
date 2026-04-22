@@ -6,12 +6,10 @@ import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from 
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import useAuth from "@/hooks/useAuth";
 
 // Destructure the function from props
 export function LoginForm({ className, onFormSubmit, onGoogleLogin, ...props }) {
-  const { loginWithGoogle } = useAuth();
-  console.log(loginWithGoogle)
+
   const {
     register,
     handleSubmit,

@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Loading from "@/components/shared/Loading";
 import { toast } from "sonner";
+import { BiCheckCircle } from "react-icons/bi";
 
 const MySubmissions = () => {
   const {user} = useAuth();
@@ -39,7 +40,7 @@ const MySubmissions = () => {
       <div>
         {submissions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
-            <CheckCircle className="h-12 w-12 text-muted-foreground/50 mb-4" />
+            <BiCheckCircle className="h-12 w-12 text-muted-foreground/50 mb-4" />
             <h3 className="text-lg font-semibold">No approved submissions yet</h3>
             <p className="text-sm text-muted-foreground mt-1">
               Your approved submissions will appear here.

@@ -39,6 +39,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Link } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
+import useRole from "@/hooks/useRole";
 
 const menuItemsArr = {
   worker: [
@@ -61,25 +62,17 @@ const menuItemsArr = {
   ],
 };
 
-// 👇 dummy user data (replace later with backend/AuthContext)
-const dummyUser = {
-  role: "buyer", // worker | buyer | admin
-  name: "John Doe",
-  email: "john.doe@example.com",
-  avatar: "",
-};
-
-
 const DashboardSidebar = () => {
-  const menuItems = menuItemsArr[dummyUser.role] || [];
-    const { setOpenMobile } = useSidebar();
+  //import user and role from hooks
+  const {user} = useAuth();
+  const {role} = useRole();
+
+  const menuItems = menuItemsArr[role] || [];
+  const { setOpenMobile } = useSidebar();
   const handleLogout = () => {
     // Handle logout logic here
     console.log("Logging out...");
   };
-
-  //import user from auth
-  const {user} = useAuth();
 
   return (
     <Sidebar>
