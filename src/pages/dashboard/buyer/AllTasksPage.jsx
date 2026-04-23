@@ -1,57 +1,56 @@
 
 import AddedTasksTable from '@/components/features/dashboard/buyer/AddedTasksTable';
+import Loading from '@/components/shared/Loading';
 import DashboardSectionHeader from '@/components/ui/dashboard-section-header';
-import { useState } from 'react';
+import useAuth from '@/hooks/useAuth';
+import useAxiosSecure from '@/hooks/useAxiosSecure';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from "sonner";
 
 const AllTasksPage = () => {
-  // Dummy Data - Sorted by date descending
-  const [tasks, setTasks] = useState([
-    {
-      _id: "t_1",
-      task_title: "Social Media Engagement",
-      task_detail: "Like and comment on the pinned post.",
-      submission_info: "Provide screenshot of the comment.",
-      payable_amount: 5,
-      required_workers: 10,
-      completion_date: "2026-05-20",
-    },
-    {
-      _id: "t_2",
-      task_title: "App Testing",
-      task_detail: "Download and open the app for 2 mins.",
-      submission_info: "Username used to register.",
-      payable_amount: 50,
-      required_workers: 2,
-      completion_date: "2026-04-15",
+  const {user} = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
+
+  //fetch all added task data from the backend
+  const {data: tasks = [], isLoading} = useQuery({
+    queryKey: ['tasks', user?.email],
+    enabled: !!user?.email,
+    queryFn: async ()=> {
+      const {data} = await axiosSecure.get(`/tasks/buyer/${user?.email}`)
+      return data
     }
-  ].sort((a, b) => new Date(b.completion_date) - new Date(a.completion_date)));
+  })
 
-  const handleUpdate = (id, updatedData) => {
-    setTasks(prev => prev.map(t => t._id === id ? { ...t, ...updatedData } : t));
-    toast.success("Task updated successfully");
+
+  const {mutateAsync: updateTask} = useMutation({
+    mutationFn: async ({id, updatedData}) =>{
+      const {data} = await axiosSecure.patch(`/tasks/${id}`, updatedData);
+      return data;
+    },
+    onSuccess: ()=>{
+      queryClient.invalidateQueries(['tasks', user?.email]),
+      toast.success("Task updated successfully!")
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Failed to update task");
+    },
+
+  })
+  const handleUpdate = async (id, updatedData) => {
+    // You call the mutation function here
+    await updateTask({ id, updatedData });
   };
 
-  const handleDelete = (id) => {
-    const taskToDelete = tasks.find(t => t._id === id);
-    if (!taskToDelete) return;
 
-    // Logic: Calculate refill (remaining workers * amount)
-    // Note: In a real app, you'd subtract 'already completed' workers from required_workers
-    const refillAmount = taskToDelete.required_workers * taskToDelete.payable_amount;
-    
-    setTasks(prev => prev.filter(t => t._id !== id));
-    
-    toast.success(`Task deleted. ${refillAmount} coins refilled to your account.`);
-    console.log(`Deleting ${id}. Refilling coins: ${refillAmount}`);
-  };
+  if (isLoading) return <Loading text='Loading tasks...' size='md'/>;
   return (
     <section>
       <DashboardSectionHeader title='My Added Tasks'/>
       <AddedTasksTable
         tasks={tasks} 
         onUpdate={handleUpdate} 
-        onDelete={handleDelete} 
+        // onDelete={handleDelete} 
       />
     </section>
   );
