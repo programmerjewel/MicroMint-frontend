@@ -82,7 +82,7 @@ const Routes = createBrowserRouter([
         ),
       },
       {
-        path: "my-submission",
+        path: "my-submissions",
         element: (
           <PrivateRoutes allowedRoles={["worker"]}>
             <WorkerSubmissionPage />

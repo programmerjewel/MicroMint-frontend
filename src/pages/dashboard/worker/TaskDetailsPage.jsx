@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useQuery} from "@tanstack/react-query";
+import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import {
   Card,
   CardContent,
@@ -14,15 +13,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, Users, DollarSign, Mail, Info } from "lucide-react";
+import {
+  CalendarIcon,
+  Users,
+  DollarSign,
+  Mail,
+  Info,
+  CheckCircle2,
+} from "lucide-react";
 import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
 import Loading from "@/components/shared/Loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const TaskDetailsPage = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -37,14 +45,18 @@ const TaskDetailsPage = () => {
   const { data: task, isLoading, refetch } = useQuery({
     queryKey: ["task", id],
     queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/tasks/${id}`,
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_API_URL}/tasks/${id}`
       );
       return data;
     },
     enabled: !!id,
   });
-  // console.log(task)
+
+  // Derived state from backend response
+  const isTaskFull = task?.required_workers === 0;
+  const hasAlreadySubmitted = task?.hasSubmitted; // comes directly from backend
+
   const onFormSubmit = async (formData) => {
     if (!user?.email) {
       toast.error("Please log in to submit a task");
@@ -60,14 +72,17 @@ const TaskDetailsPage = () => {
     };
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/submitted-task`, submittedTaskData);
+      await axiosSecure.post(
+        `${import.meta.env.VITE_API_URL}/submitted-task`,
+        submittedTaskData
+      );
       toast.success("Task submitted successfully!");
-      refetch();
+      refetch(); // re-fetches task — hasSubmitted will now be true
       reset();
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to submit work. Please try again.",
+          "Failed to submit work. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -156,13 +171,10 @@ const TaskDetailsPage = () => {
             </p>
           </div>
 
-          {/* Buyer Info — flat row, no card */}
+          {/* Buyer Info */}
           <div className="flex items-center gap-4 pt-4 border-t border-border">
             <Avatar>
-              <AvatarImage
-                src={task.buyer?.image}
-                alt={task.buyer?.image}
-              />
+              <AvatarImage src={task.buyer?.image} alt={task.buyer?.name} />
               <AvatarFallback>
                 {task.buyer.name?.charAt(0) || "U"}
               </AvatarFallback>
@@ -176,13 +188,24 @@ const TaskDetailsPage = () => {
           </div>
         </div>
 
-        {/* ── Right: Submission Form (single card) ── */}
+        {/* ── Right: Submission Form ── */}
         <aside className="lg:col-span-1">
-          <Card className="sticky top-24 shadow-xl ring-1 ring-primary/10">
+          <Card
+            className={'sticky top-24 shadow-2xl'}
+          >
             <CardHeader>
-              <CardTitle className="text-lg">Submit Your Proof</CardTitle>
+              <CardTitle className="text-xl flex items-center gap-2">
+                {hasAlreadySubmitted && (
+                  <CheckCircle2 className="text-green-500 w-5 h-5" />
+                )}
+                {hasAlreadySubmitted ? "Task Submitted" : "Submit Proof"}
+              </CardTitle>
               <CardDescription>
-                Enter links or details requested by the buyer.
+                {hasAlreadySubmitted
+                  ? "You have already submitted this task. Track your task status and earnings in the dashboard."
+                  : isTaskFull
+                  ? "This task has reached its maximum number of workers."
+                  : "Carefully provide the proof requested to ensure approval od submitted."}
               </CardDescription>
             </CardHeader>
 
@@ -190,7 +213,10 @@ const TaskDetailsPage = () => {
               <CardContent className="my-4">
                 <Textarea
                   placeholder="Paste your work proof here..."
-                  className={`min-h-50 resize-none ${errors.submission_details ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  disabled={hasAlreadySubmitted || isTaskFull || !user}
+                  className={`min-h-50 resize-none ${
+                    hasAlreadySubmitted ? "bg-muted/50 grayscale-50" : ""
+                  }`}
                   {...register("submission_details", {
                     required: "Submission details are required",
                     minLength: {
@@ -199,26 +225,41 @@ const TaskDetailsPage = () => {
                     },
                   })}
                 />
-                {errors.submission_details && (
-                  <p className="text-destructive text-sm mt-1.5 flex items-center gap-1">
+                {errors.submission_details && !hasAlreadySubmitted && (
+                  <p className="text-destructive text-sm flex items-center gap-1 mt-1.5">
                     <Info className="w-3 h-3 shrink-0" />
                     {errors.submission_details.message}
                   </p>
                 )}
               </CardContent>
 
-              <CardFooter>
+              <CardFooter className="flex flex-col gap-2">
                 <Button
                   type="submit"
-                  className="w-full font-semibold"
-                  disabled={isSubmitting || !user}
+                  className="w-full"
+                  variant={hasAlreadySubmitted ? "secondary" : "default"}
+                  disabled={
+                    isSubmitting || !user || hasAlreadySubmitted || isTaskFull
+                  }
                 >
                   {isSubmitting
-                    ? "Processing..."
+                    ? "Submitting..."
+                    : hasAlreadySubmitted
+                    ? "Completed ✓"
+                    : isTaskFull
+                    ? "Task Full"
                     : !user
-                      ? "Login to Submit"
-                      : "Submit Task"}
+                    ? "Login to Work"
+                    : "Submit Task"}
                 </Button>
+
+                {hasAlreadySubmitted && (
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/dashboard/my-submissions">
+                      View My Submissions
+                    </Link>
+                  </Button>
+                )}
               </CardFooter>
             </form>
           </Card>

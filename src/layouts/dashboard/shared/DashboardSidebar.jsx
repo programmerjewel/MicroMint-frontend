@@ -45,7 +45,7 @@ const menuItemsArr = {
   worker: [
     { title: "Home", url: "worker-home", icon: Home },
     { title: "Task List", url: "task-list", icon: Inbox },
-    { title: "My Submissions", url: "my-submission", icon: Send },
+    { title: "My Submissions", url: "my-submissions", icon: Send },
     { title: "Withdrawals", url: "withdrawals", icon: BanknoteArrowDown },
   ],
   buyer: [

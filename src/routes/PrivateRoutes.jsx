@@ -7,7 +7,7 @@ const PrivateRoutes = ({children, allowedRoles}) => {
   const location = useLocation();
   const {role, isRoleLoading} = useRole();
 
-  if(isRoleLoading) return <div className="min-h-screen flex flex-col justify-center"><Loading size="md" text="Loading..." /></div>
+  if(isRoleLoading) return <div className="min-h-screen flex flex-col justify-center"><Loading size="xl" /></div>
   if(allowedRoles.includes(role)){
     return children
   }
