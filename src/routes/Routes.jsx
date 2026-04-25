@@ -20,6 +20,8 @@ import ErrorPage from "@/pages/public/ErrorPage";
 import HomePage from "@/pages/public/Home";
 import { createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "./PrivateRoutes";
+import DashboardIndexRedirect from "./DashboardIndexRedirect";
+import RoleGuard from "./RoleGuard";
 
 const Routes = createBrowserRouter([
   {
@@ -48,11 +50,15 @@ const Routes = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      <PrivateRoutes allowedRoles={["admin", "buyer", "worker"]}>
+      <PrivateRoutes>
         <DashboardLayout />
       </PrivateRoutes>
     ),
     children: [
+      {
+        index: true,
+        element: <DashboardIndexRedirect/>,
+      },
       {
         path: "profile",
         element: <ProfilePage />,
@@ -60,105 +66,105 @@ const Routes = createBrowserRouter([
       {
         path: "worker-home",
         element: (
-          <PrivateRoutes allowedRoles={["worker"]}>
+          <RoleGuard allowedRoles={["worker"]}>
             <WorkerHomePage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "task-list",
         element: (
-          <PrivateRoutes allowedRoles={["worker"]}>
+          <RoleGuard allowedRoles={["worker"]}>
             <TaskListPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "tasks/:id",
         element: (
-          <PrivateRoutes allowedRoles={["worker"]}>
+          <RoleGuard allowedRoles={["worker"]}>
             <TaskDetailsPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "my-submissions",
         element: (
-          <PrivateRoutes allowedRoles={["worker"]}>
+          <RoleGuard allowedRoles={["worker"]}>
             <WorkerSubmissionPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "withdrawals",
         element: (
-          <PrivateRoutes allowedRoles={["worker"]}>
+          <RoleGuard allowedRoles={["worker"]}>
             <WorkerWithdrawalPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "buyer-home",
         element: (
-          <PrivateRoutes allowedRoles={["buyer"]}>
+          <RoleGuard allowedRoles={["buyer"]}>
             <BuyerHomePage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "add-task",
         element: (
-          <PrivateRoutes allowedRoles={["buyer"]}>
+          <RoleGuard allowedRoles={["buyer"]}>
             <AddTaskPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "tasks",
         element: (
-          <PrivateRoutes allowedRoles={["buyer"]}>
+          <RoleGuard allowedRoles={["buyer"]}>
             <AllTasksPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "purchase-coins",
         element: (
-          <PrivateRoutes allowedRoles={["buyer"]}>
+          <RoleGuard allowedRoles={["buyer"]}>
             <PurchaseCoinsPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "payments",
         element: (
-          <PrivateRoutes allowedRoles={["buyer"]}>
+          <RoleGuard allowedRoles={["buyer"]}>
             <PaymentHistoryPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "admin-home",
         element: (
-          <PrivateRoutes allowedRoles={["admin"]}>
+          <RoleGuard allowedRoles={["admin"]}>
             <AdminHomePage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "manage-users",
         element: (
-          <PrivateRoutes allowedRoles={["admin"]}>
+          <RoleGuard allowedRoles={["admin"]}>
             <ManageUsers />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
       {
         path: "manage-tasks",
         element: (
-          <PrivateRoutes allowedRoles={["admin"]}>
+          <RoleGuard allowedRoles={["admin"]}>
             <ManageTasksPage />
-          </PrivateRoutes>
+          </RoleGuard>
         ),
       },
     ],

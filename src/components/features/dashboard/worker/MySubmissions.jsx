@@ -2,20 +2,21 @@ import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
 import SubmissionTable from "./SubmissionTable";
 import useAuth from "@/hooks/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import Loading from "@/components/shared/Loading";
 import { toast } from "sonner";
 import { BiCheckCircle } from "react-icons/bi";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const MySubmissions = () => {
   const {user} = useAuth();
   const queryClient = useQueryClient();
+  const axiosSecure = useAxiosSecure();
 
   //fetch submitted-task data 
   const { data: submissions = [], isLoading} = useQuery({
     queryKey: ['submissions', user?.email],
     queryFn: async ()=>{
-      const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/submitted-task/${user?.email}`)
+      const {data} = await axiosSecure.get(`/submitted-task/${user?.email}`)
       return data
     }
   })
@@ -24,7 +25,7 @@ const MySubmissions = () => {
   //handle submit cancellation
   const {mutateAsync: cancelSubmission} = useMutation({
     mutationFn: async(id) =>{
-      return await axios.delete(`${import.meta.env.VITE_API_URL}/submitted-task/${id}`)
+      return await axiosSecure.delete(`/submitted-task/${id}`)
     },
     onSuccess: ()=>{
       queryClient.invalidateQueries(['submissions', user?.email]);

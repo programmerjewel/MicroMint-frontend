@@ -1,16 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import SubmissionTable from "./SubmissionTable";
 import useAuth from "@/hooks/useAuth";
-import axios from "axios";
 import Loading from "@/components/shared/Loading";
 import { CheckCircle } from "lucide-react";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const ApprovedSubmissions = () => {
   const {user} = useAuth();
+  const axiosSecure = useAxiosSecure()
  const { data: submissions = [], isLoading} = useQuery({
     queryKey: ['submissions', user?.email],
     queryFn: async ()=>{
-      const {data} = await axios.get(`${import.meta.env.VITE_API_URL}/submitted-task/${user?.email}`)
+      const {data} = await axiosSecure.get(`${import.meta.env.VITE_API_URL}/submitted-task/${user?.email}`)
       return data
     }
   })

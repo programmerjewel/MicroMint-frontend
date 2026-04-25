@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "./useAuth";
-import { axiosSecure } from "./useAxiosSecure";
+import useAxiosSecure from "./useAxiosSecure";
 
 const useRole = () => {
   const { user, loading:authLoading } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   const { data, isLoading: isQueryLoading, refetch } = useQuery({
     queryKey: ['userRole', user?.email],
@@ -27,12 +28,13 @@ const useRole = () => {
         pendingRequest,
       };
     },
+    staleTime: 1000 * 60 * 5,
   });
 
   const isRoleLoading = authLoading || isQueryLoading;
 
   return {
-    role: isRoleLoading ? undefined : (data?.role || 'worker'),
+    role: isRoleLoading ? undefined : (data?.role ?? null),
     pendingRequest: data?.pendingRequest ?? null,
     isRoleLoading,
     refetch,
