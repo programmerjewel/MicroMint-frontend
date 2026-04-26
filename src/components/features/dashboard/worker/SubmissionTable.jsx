@@ -16,7 +16,7 @@ const SubmissionTable = ({submissions, onCancel}) => {
             <TableHead className='font-semibold'>Buyer Name</TableHead>
             <TableHead className='font-semibold'>Payable Amount</TableHead>
             <TableHead className='font-semibold'>Status</TableHead>
-            <TableHead className='font-semibold'>Action</TableHead>
+            <TableHead className='font-semibold text-right'>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

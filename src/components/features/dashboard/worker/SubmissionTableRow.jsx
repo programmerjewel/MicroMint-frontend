@@ -1,74 +1,61 @@
+import React from "react";
+import { Link } from "react-router-dom";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { RotateCcw, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import SubmissionDetailsModal from "./SubmissionDetailsModal";
+import CancelSubmissionModal from "./CancelSubmissionModal";
 
 const SubmissionTableRow = ({ submission, onCancel }) => {
-  const { _id, task_title, buyer, payable_amount, status } = submission;
+  const { _id, task_id, task_title, buyer, payable_amount, status } =
+    submission;
 
   const statusStyles = {
-    pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100 border-yellow-200",
-    approved: "bg-green-100 text-green-800 hover:bg-green-100 border-green-200",
-    rejected: "bg-red-100 text-red-800 hover:bg-red-100 border-red-200",
+    pending: "bg-amber-50 text-amber-700 border-amber-200",
+    approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    rejected: "bg-rose-50 text-rose-700 border-rose-200",
   };
 
-  const currentStyle = statusStyles[status.toLowerCase()] || "bg-gray-100 text-gray-800";
-  const isPending = status.toLowerCase() === "pending";
- 
+  const currentStyle = statusStyles[status] || "bg-gray-50 text-gray-600";
 
   return (
-    <TableRow>
-      <TableCell className="text-gray-900">{task_title}</TableCell>
-      <TableCell className='text-gray-900'>{buyer.name}</TableCell>
-      <TableCell className= ''>
-        <span className="font-semibold text-green-600">
+    <TableRow className="hover:bg-gray-50/50 transition-colors">
+      <TableCell className="font-medium text-gray-900">{task_title}</TableCell>
+      <TableCell className="text-gray-600">{buyer.name}</TableCell>
+      <TableCell>
+        <span className="font-bold text-emerald-600">
           ${payable_amount.toFixed(2)}
         </span>
       </TableCell>
       <TableCell>
-        <Badge variant="outline" className={`capitalize ${currentStyle}`}>
+        <Badge
+          variant="outline"
+          className={`capitalize px-2 py-0.5 rounded-full font-medium flex items-center w-fit gap-1 ${currentStyle}`}
+        >
+          {status === "pending" && <Clock className="w-3 h-3" />}
+          {status === "approved" && <CheckCircle2 className="w-3 h-3" />}
+          {status === "rejected" && <AlertCircle className="w-3 h-3" />}
           {status}
         </Badge>
       </TableCell>
-      <TableCell>
-        {isPending ? (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" size="sm" className="text-xs hover:text-red-600">
-                Cancel
-              </Button>
-            </AlertDialogTrigger>
-            
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirm Cancellation</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to cancel? This spot will be opened for others.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>No</AlertDialogCancel>
-                <AlertDialogAction onClick={() => onCancel(_id)} className="bg-red-600">
-                  Yes, Cancel
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+
+      <TableCell className="text-right">
+        {status === "pending" ? (
+          <CancelSubmissionModal submissionId={_id} onCancel={onCancel} />
+        ) : status === "approved" ? (
+          <SubmissionDetailsModal submission={submission} />
         ) : (
-          // If not pending, show a disabled button or a tooltip
-          <Button variant="ghost" size="sm" disabled className="cursor-not-allowed opacity-50">
-            Locked
-          </Button>
+          /* status === "rejected" */
+          <Link to={`/dashboard/tasks/${task_id}`}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300 transition-all shadow-sm"
+            >
+              <RotateCcw className="w-3.5 h-3.5 mr-1" /> Resubmit
+            </Button>
+          </Link>
         )}
       </TableCell>
     </TableRow>

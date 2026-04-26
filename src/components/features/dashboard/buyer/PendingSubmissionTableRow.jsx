@@ -24,7 +24,7 @@ import { Eye, CheckCircle, XCircle } from "lucide-react";
 const PendingSubmissionTableRow = ({ submission, onApprove, onReject }) => {
   return (
     <TableRow>
-      <TableCell className="font-medium">{submission.worker_name}</TableCell>
+      <TableCell className="font-medium">{submission.worker.name}</TableCell>
       <TableCell>{submission.task_title}</TableCell>
       <TableCell className="font-semibold text-green-700">
         ${submission.payable_amount.toFixed(2)}

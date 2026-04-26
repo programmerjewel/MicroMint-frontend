@@ -1,184 +1,191 @@
-import {
-  Home,
-  Inbox,
-  Send,
-  BanknoteArrowDown,
-  PackagePlus,
-  Coins,
-  CreditCard,
-  Users,
-  ClipboardList,
-  ChevronUp,
-  Settings,
-  LogOut,
-  HelpCircle,Boxes
-} from "lucide-react";
+  import {
+    Home,
+    Inbox,
+    Send,
+    BanknoteArrowDown,
+    PackagePlus,
+    Coins,
+    CreditCard,
+    Users,
+    ClipboardList,
+    ChevronUp,
+    Settings,
+    LogOut,
+    HelpCircle,Boxes,
+    ArrowLeft
+  } from "lucide-react";
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  useSidebar,
-} from "@/components/ui/sidebar";
+  import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarGroup,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuItem,
+    SidebarMenuButton,
+    useSidebar,
+  } from "@/components/ui/sidebar";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { Link } from "react-router-dom";
-import useAuth from "@/hooks/useAuth";
-import useRole from "@/hooks/useRole";
+  import { Link } from "react-router-dom";
+  import useAuth from "@/hooks/useAuth";
+  import useRole from "@/hooks/useRole";
 
-const menuItemsArr = {
-  worker: [
-    { title: "Home", url: "worker-home", icon: Home },
-    { title: "Task List", url: "task-list", icon: Inbox },
-    { title: "My Submissions", url: "my-submissions", icon: Send },
-    { title: "Withdrawals", url: "withdrawals", icon: BanknoteArrowDown },
-  ],
-  buyer: [
-    { title: "Home", url: "buyer-home", icon: Home },
-    { title: "Add New Task", url: "add-task", icon: PackagePlus },
-    { title: "All Tasks", url: "tasks", icon: Boxes },
-    { title: "Purchase Coin", url: "purchase-coins", icon: Coins },
-    { title: "Payment History", url: "payments", icon: CreditCard },
-  ],
-  admin: [
-    { title: "Home", url: "admin-home", icon: Home },
-    { title: "Manage Users", url: "manage-users", icon: Users },
-    { title: "Manage Tasks", url: "manage-tasks", icon: ClipboardList },
-  ],
-};
-
-const DashboardSidebar = () => {
-  //import user and role from hooks
-  const {user} = useAuth();
-  const {role} = useRole();
-
-  const menuItems = menuItemsArr[role] || [];
-  const { setOpenMobile } = useSidebar();
-  const handleLogout = () => {
-    // Handle logout logic here
-    console.log("Logging out...");
+  const menuItemsArr = {
+    worker: [
+      { title: "Home", url: "worker-home", icon: Home },
+      { title: "Task List", url: "task-list", icon: Inbox },
+      { title: "My Submissions", url: "my-submissions", icon: Send },
+      { title: "Withdrawals", url: "withdrawals", icon: BanknoteArrowDown },
+    ],
+    buyer: [
+      { title: "Home", url: "buyer-home", icon: Home },
+      { title: "Add New Task", url: "add-task", icon: PackagePlus },
+      { title: "All Tasks", url: "tasks", icon: Boxes },
+      { title: "Purchase Coin", url: "purchase-coins", icon: Coins },
+      { title: "Payment History", url: "payments", icon: CreditCard },
+    ],
+    admin: [
+      { title: "Home", url: "admin-home", icon: Home },
+      { title: "Manage Users", url: "manage-users", icon: Users },
+      { title: "Manage Tasks", url: "manage-tasks", icon: ClipboardList },
+    ],
   };
 
-  return (
-    <Sidebar>
-      {/* Header */}
-      <SidebarHeader className="px-4 py-3 font-bold text-lg">
-        Dashboard
-      </SidebarHeader>
+  const DashboardSidebar = () => {
+    //import user and role from hooks
+    const {user} = useAuth();
+    const {role} = useRole();
 
-      {/* Content */}
-      <SidebarContent>
-        <SidebarGroup>
+    const menuItems = menuItemsArr[role] || [];
+    const { setOpenMobile } = useSidebar();
+    const handleLogout = () => {
+      // Handle logout logic here
+      console.log("Logging out...");
+    };
+
+    return (
+      <Sidebar>
+        {/* Header */}
+        <SidebarHeader className="px-4 py-3">
+          <h3 className="font-bold text-lg">Dashboard</h3>
+          <SidebarMenuButton asChild className="bg-muted/50 hover:bg-muted text-muted-foreground">
+            <Link to="/" className="flex items-center gap-3" onClick={() => setOpenMobile(false)}>
+              <ArrowLeft className="h-4 w-4" />
+              <span className="font-medium">Back to Main Site</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarHeader>
+        
+        {/* Content */}
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarMenu>
+              {menuItems.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link to={item.url} className="flex items-center gap-3" onClick={() => setOpenMobile(false)}>
+                        <Icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroup>
+        </SidebarContent>
+
+        {/* Footer with Profile Dropdown */}
+        <SidebarFooter className="p-2">
           <SidebarMenu>
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url} className="flex items-center gap-3" onClick={() => setOpenMobile(false)}>
-                      <Icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
-          </SidebarMenu>
-        </SidebarGroup>
-      </SidebarContent>
-
-      {/* Footer with Profile Dropdown */}
-      <SidebarFooter className="p-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="w-full justify-between hover:bg-accent"
-                >
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.photoURL} alt={user?.displayName} />
-                      <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                        {user?.displayName
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col items-start text-left">
-                      <span className="text-sm font-medium">{user?.displayName}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {user?.email}
-                      </span>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    size="lg"
+                    className="w-full justify-between hover:bg-accent"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={user?.photoURL} alt={user?.displayName} />
+                        <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                          {user?.displayName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col items-start text-left">
+                        <span className="text-sm font-medium">{user?.displayName}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {user?.email}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                align="start"
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
-              >
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{user?.displayName}</p>
-                    <p className="text-xs text-muted-foreground">{user?.email}</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="flex items-center gap-2 cursor-pointer" onClick={() => setOpenMobile(false)}>
-                    <dummyUser className="h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
-                    <Settings className="h-4 w-4" />
-                    <span>Settings</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/help" className="flex items-center gap-2 cursor-pointer">
-                    <HelpCircle className="h-4 w-4" />
-                    <span>Help & Support</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive"
+                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  align="start"
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
                 >
-                  <LogOut className="h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
-  );
-};
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium">{user?.displayName}</p>
+                      <p className="text-xs text-muted-foreground">{user?.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center gap-2 cursor-pointer" onClick={() => setOpenMobile(false)}>
+                      <dummyUser className="h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="h-4 w-4" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/help" className="flex items-center gap-2 cursor-pointer">
+                      <HelpCircle className="h-4 w-4" />
+                      <span>Help & Support</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+    );
+  };
 
-export default DashboardSidebar;
+  export default DashboardSidebar;

@@ -1,75 +1,71 @@
-import { useState } from 'react';
-import { toast, Toaster } from "sonner"; 
-import BuyerStats from '@/components/features/dashboard/buyer/BuyerStats';
-import DashboardSectionHeader from '@/components/ui/dashboard-section-header';
-import PendingSubmissionTable from '@/components/features/dashboard/buyer/PendingSubmissionTable';
+import { toast, Toaster } from "sonner";
+import BuyerStats from "@/components/features/dashboard/buyer/BuyerStats";
+import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
+import PendingSubmissionTable from "@/components/features/dashboard/buyer/PendingSubmissionTable";
+import useAuth from "@/hooks/useAuth";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Loading from "@/components/shared/Loading";
 
 const BuyerHomePage = () => {
- 
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
 
-  // Dummy Data for Table
-  const [data, setData] = useState([
-    {
-      _id: "s1",
-      task_id: "t101",
-      worker_name: "Alice Johnson",
-      worker_email: "alice@example.com",
-      task_title: "Logo Design Feedback",
-      payable_amount: 5.00,
-      submission_details: "I have reviewed the logo and provided three variations in the attached drive link. The color palette was adjusted to hex #34521."
+  const { data: submissions = [], isLoading } = useQuery({
+    queryKey: ["buyer-pending-submissions", user?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `/submitted-task/buyer/${user?.email}`
+      );
+      return data;
     },
-    {
-      _id: "s2",
-      task_id: "t102",
-      worker_name: "Bob Smith",
-      worker_email: "bob@example.com",
-      task_title: "Data Entry - Spreadsheet",
-      payable_amount: 12.50,
-      submission_details: "Completed 500 entries of the product catalog. Verified all SKUs against the master list."
-    },
-    {
-      _id: "s3",
-      task_id: "t101",
-      worker_name: "Charlie Brown",
-      worker_email: "charlie@example.com",
-      task_title: "Logo Design Feedback",
-      payable_amount: 5.00,
-      submission_details: "The design looks clean, but I suggest increasing the font size of the tagline by 2px."
-    }
-  ]);
+    enabled: !!user?.email,
+  });
 
-  // Handlers with UI feedback
-  const handleApprove = (submissionId, workerEmail, amount) => {
-    // Simulating API Success
-    toast.success(`Approved! $${amount} sent to ${workerEmail}`);
-    setData(prev => prev.filter(item => item._id !== submissionId));
+  const { mutate: reviewSubmission } = useMutation({
+    mutationFn: async ({ id, action }) =>
+      axiosSecure.patch(`/submitted-task/${id}/review`, { action }),
+    onSuccess: (_, { action, workerEmail, amount }) => {
+      queryClient.invalidateQueries(["buyer-pending-submissions", user?.email]);
+      if (action === "approved") {
+        toast.success(`Approved! $${amount} coins sent to ${workerEmail}`);
+      } else {
+        toast.error("Submission rejected. Task slot reopened.");
+      }
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Action failed");
+    },
+  });
+
+  const handleApprove = (submissionId, workerEmail) => {
+    reviewSubmission({ id: submissionId, action: "approved", workerEmail});
   };
 
   const handleReject = (submissionId, taskId) => {
-    console.log("Rejecting submission for Task ID:", taskId);
-    // Simulating API Success
-    toast.error("Submission rejected. Task slot reopened.");
-    setData(prev => prev.filter(item => item._id !== submissionId));
+    reviewSubmission({ id: submissionId, action: "rejected", taskId });
   };
+
+  if (isLoading)
+    return <Loading variant="fullscreen" text="Loading submissions..." size="xl" />;
 
   return (
     <section>
-      {/* Toast provider for notifications */}
       <Toaster position="top-center" richColors />
-      <DashboardSectionHeader title="Buyer Dashboard"/>
+      <DashboardSectionHeader title="Buyer Dashboard" />
       <BuyerStats />
-      <div className="">
+      <div>
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold my-4">Submissions to Review</h2>
           <span className="text-sm text-muted-foreground">
-            {data.length} pending reviews
+            {submissions.length} pending reviews
           </span>
         </div>
-        
         <PendingSubmissionTable
-          submissions={data} 
-          onApprove={handleApprove} 
-          onReject={handleReject} 
+          submissions={submissions}
+          onApprove={handleApprove}
+          onReject={handleReject}
         />
       </div>
     </section>
