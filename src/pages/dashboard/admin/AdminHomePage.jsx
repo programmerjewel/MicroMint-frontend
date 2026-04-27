@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { toast, Toaster } from "sonner";
 import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
 import WithdrawRequestTable from '@/components/features/dashboard/admin/WithdrawRequestTable';
+import AdminStats from '@/components/features/dashboard/admin/AdminStats';
 
 const AdminHome = () => {
   // Dummy Withdrawal Data
@@ -48,6 +49,7 @@ const AdminHome = () => {
       <DashboardSectionHeader title="Admin Dashboard" />
 
       {/* Overview Cards (AdminStats) should go here */}
+      <AdminStats/>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between px-2">
