@@ -10,13 +10,13 @@ import ManageTasksTableRow from "./ManageTasksTableRow";
 
 const ManageTasksTable = ({ tasks = [], onDelete }) => {
   return (
-    <div className="rounded-md border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-md bg-white overflow-hidden">
       <Table>
         <TableHeader className="bg-slate-50">
           <TableRow>
             <TableHead>Task Details</TableHead>
             <TableHead>Buyer Info</TableHead>
-            <TableHead>Workers</TableHead>
+            <TableHead className='text-right'>Required Workers</TableHead>
             <TableHead>Amount</TableHead>
             <TableHead>Deadline</TableHead>
             <TableHead className="text-right">Action</TableHead>

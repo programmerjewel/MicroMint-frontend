@@ -26,29 +26,10 @@ const ManageTasksPage = () => {
     return <div className="text-center text-red-500 py-10">Error loading tasks.</div>;
   }
 
-  // const [searchQuery, setSearchQuery] = useState("");
-
-  // Cleaned up Delete Handler
-  // const handleDeleteTask = (taskId) => {
-  //   // 1. In real app: axios.delete(`/api/admin/tasks/${taskId}`)
-  //   setTasks((prev) => prev.filter((t) => t._id !== taskId));
-    
-  //   // 2. Success Feedback
-  //   toast.error("Task has been removed from the database.");
-  // };
-
-  // const filteredTasks = tasks.filter(task => 
-  //   task.task_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //   task.buyer_email.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
-
   return (
-    <section className="space-y-6">
-      {/* <Toaster position="top-center" richColors closeButton /> */}
-      
-      <DashboardSectionHeader title="Manage All Tasks" className="" />
-
-      <div className="flex flex-col justify-end md:flex-row items-center">
+    <section className="">
+      <div className="flex justify-between items-center">
+        <DashboardSectionHeader title="Manage All Tasks" className="mb-2"/>
         <Badge variant="secondary">Total Tasks: {tasks.length}</Badge>
       </div>
 

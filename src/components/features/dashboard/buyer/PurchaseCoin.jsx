@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Coins, CreditCard, Sparkles } from "lucide-react";
 import { toast, Toaster } from "sonner";
+import { RiCoinsLine } from 'react-icons/ri';
 
 const PurchaseCoin = () => {
   const [isProcessing, setIsProcessing] = useState(null);

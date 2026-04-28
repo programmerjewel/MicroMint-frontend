@@ -9,31 +9,24 @@ import Loading from "@/components/shared/Loading";
 const DashboardLayout = () => {
   const { user, loading } = useAuth();
 
- 
-  if (loading) {
-  return <Loading variant="fullscreen" text="Verifying session..." size="xl" />;
-}
+    if (loading) {
+      return <Loading variant="fullscreen" text="Verifying session..." size="xl" />;
+    }
 
-  // 2. Security Check
-  // If no user is logged in, kick them back to the login page
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
 
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         <DashboardSidebar />
 
-        <div className="flex flex-col flex-1">
-          {/* You can pass user as a prop if you prefer, 
-              but the Header can also just call useAuth() itself! */}
+        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
           <DashboardHeader />
-          
           <main className="flex-1 p-6 bg-slate-50/50">
             <Outlet />
           </main>
-          
           <DashboardFooter />
         </div>
       </div>

@@ -4,7 +4,7 @@ const DashboardSectionHeader = ({
   title, titleSize = "text-2xl md:text-3xl", className = "",
 }) => {
   return (
-    <div className={`mb-6 ${className}`}>
+    <div className={`${className}`}>
       <h2 className={`${titleSize} font-bold text-foreground mb-4`}>
         {title}
       </h2>
