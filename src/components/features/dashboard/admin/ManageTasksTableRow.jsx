@@ -4,7 +4,6 @@ import { GoPeople } from 'react-icons/go';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { LiaCoinsSolid } from 'react-icons/lia';
 import ConfirmDeleteModal from "@/components/shared/ConfirmDeleteModal";
-import { Badge } from "@/components/ui/badge";
 
 const ManageTasksTableRow = ({ task, onDelete }) => {
   return (

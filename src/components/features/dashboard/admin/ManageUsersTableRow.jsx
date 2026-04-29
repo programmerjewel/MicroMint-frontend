@@ -1,105 +1,104 @@
-// ManageUsersTableRow.jsx
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Trash2, Coins, Check, X } from "lucide-react";
+import { Check, X } from "lucide-react";
+import { LiaCoinsSolid } from "react-icons/lia";
 import { Badge } from "@/components/ui/badge";
+import ConfirmDeleteModal from "@/components/shared/ConfirmDeleteModal";
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import { cn } from "@/lib/utils";
 
-const roleBadgeClass = {
-  admin: "bg-rose-50 text-rose-600 border-rose-100",
-  buyer: "bg-blue-50 text-blue-600 border-blue-100",
-  worker: "bg-slate-50 text-slate-600 border-slate-100",
+const roleStyles = {
+  admin: "bg-rose-50 text-rose-600 border-rose-200",
+  buyer: "bg-violet-50 text-violet-600 border-violet-200",
+  worker: "bg-sky-50 text-sky-600 border-sky-200",
 };
 
 const ManageUsersTableRow = ({ user, roleRequest, onStatusUpdate, onRemove }) => {
-  const { _id, display_name, name, user_email, email, photo_url, image, role, coin } = user;
-
-  const displayName = display_name || name;
-  const displayEmail = user_email || email;
-  const displayPhoto = photo_url || image;
+  const { _id, name, email, image, role, coins } = user;
+  const status = roleRequest?.status?.toLowerCase();
 
   return (
-    <TableRow className="group hover:bg-slate-50/80 transition-colors">
-      {/* User Info */}
-      <TableCell className="py-4">
+    <TableRow>
+      
+      <TableCell className="py-3 px-4">
         <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10 border shadow-sm">
-            <AvatarImage src={displayPhoto} alt={displayName} />
-            <AvatarFallback className="bg-slate-100 text-slate-600 font-bold">
-              {displayName?.charAt(0)?.toUpperCase()}
-            </AvatarFallback>
+          <Avatar className="h-9 w-9 ring-2 ring-slate-100">
+            <AvatarImage src={image} alt={name} referrerPolicy="no-referrer" />
+            <AvatarFallback className="bg-slate-800 text-white text-xs">{name?.[0]}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col min-w-0">
-            <span className="font-semibold text-sm text-slate-900 truncate">
-              {displayName}
-            </span>
-            <span className="text-xs text-slate-500 truncate">
-              {displayEmail}
-            </span>
+            <span className="font-semibold text-slate-800 truncate">{name}</span>
+            <span className="text-xs text-slate-400 truncate">{email}</span>
           </div>
         </div>
       </TableCell>
 
-      {/* Column 2: Current Role */}
+      
       <TableCell>
-        <Badge 
-          variant="outline" 
-          className={`capitalize px-2.5 py-0.5 rounded-full ${roleBadgeClass[role?.toLowerCase()] || "bg-slate-50"}`}
-        >
+        <div className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full text-amber-700">
+          <LiaCoinsSolid className="h-3.5 w-3.5" />
+          <span className="text-xs font-bold">{coins ?? 0}</span>
+        </div>
+      </TableCell>
+
+      
+      <TableCell>
+        <Badge variant="outline" className={cn("capitalize text-[10px] px-2", roleStyles[role?.toLowerCase()])}>
           {role}
         </Badge>
       </TableCell>
 
-      {/* Column 3: Role Request (The specific column you wanted) */}
-      <TableCell>
+      
+      <TableCell className='text-center'>
         {roleRequest ? (
-          <div className="flex items-center gap-3 animate-in fade-in slide-in-from-right-2 duration-300">
-            <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-amber-200 capitalize py-1">
-              {roleRequest.requestedRole}
-            </Badge>
-            <div className="flex gap-1">
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => onStatusUpdate(roleRequest._id, "approved")}
-                className="h-8 w-8 text-emerald-600 hover:bg-emerald-50 rounded-full border border-transparent hover:border-emerald-200"
-              >
-                <Check className="h-4 w-4" />
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => onStatusUpdate(roleRequest._id, "rejected")}
-                className="h-8 w-8 text-rose-500 hover:bg-rose-50 rounded-full border border-transparent hover:border-rose-200"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
+            <span className="text-xs font-bold text-slate-700 capitalize">{roleRequest.requestedRole}</span>
+        ) : <span className="text-slate-300 text-xs">N/A</span>}
+      </TableCell>
+
+      
+      <TableCell className='text-center'>
+        {status === "pending" ? (
+          <div className="flex gap-2 justify-center items-center">
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              onClick={() => onStatusUpdate(roleRequest._id, "approved")} 
+              className="h-7 px-2 text-[10px] font-bold text-emerald-600 border border-emerald-100 hover:bg-emerald-50 gap-1"
+            >
+              <Check className="h-3 w-3" /> Approve
+            </Button>
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              onClick={() => onStatusUpdate(roleRequest._id, "rejected")} 
+              className="h-7 px-2 text-[10px] font-bold text-rose-500 border border-rose-100 hover:bg-rose-50 gap-1"
+            >
+              <X className="h-3 w-3" /> Reject
+            </Button>
           </div>
         ) : (
-          <span className="text-slate-300 ml-4">—</span>
+          <span className="text-slate-300 text-[10px] italic">No active request</span>
         )}
       </TableCell>
 
-      {/* Column 4: Coins */}
-      <TableCell>
-        <div className="inline-flex items-center gap-1.5 font-bold text-slate-700">
-          <Coins className="h-4 w-4 text-amber-500" />
-          {coin ?? 0}
-        </div>
-      </TableCell>
 
-      {/* Column 5: Remove */}
-      <TableCell className="text-right">
-        <Button
-          variant="ghost"
-          size="sm"
-          disabled={role?.toLowerCase() === "admin"}
-          onClick={() => onRemove(_id)}
-          className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+      
+      <TableCell className="text-center pr-5">
+        <ConfirmDeleteModal
+          title="Delete User?"
+          trigger={
+            <Button 
+              size="icon" 
+              variant="ghost" 
+              disabled={role?.toLowerCase() === "admin"} 
+              className="h-8 w-8 text-red-500 disabled:opacity-20"
+            >
+              <RiDeleteBin5Fill className="h-3.5 w-3.5" />
+            </Button>
+          }
+          onConfirm={() => onRemove(_id)}
+        />
       </TableCell>
     </TableRow>
   );

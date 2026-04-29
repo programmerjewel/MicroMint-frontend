@@ -1,94 +1,64 @@
-// ManageUsers.jsx (page)
-import { useState, useCallback, useEffect } from "react";
-import { toast, Toaster } from "sonner";
-import axios from "axios";
+import { toast } from "sonner";
 import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
 import ManageUsersTable from "@/components/features/dashboard/admin/ManageUsersTable";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Loading from "@/components/shared/Loading";
+import { Badge } from "@/components/ui/badge";
+import { Users } from "lucide-react";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const ManageUsersPage = () => {
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
 
-const ManageUsers = () => {
-  const [users, setUsers] = useState([]);
-  const [roleRequests, setRoleRequests] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Fetch Users & Requests
+  const { data: users = [], isLoading: uLoad } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => (await axiosSecure.get("/users")).data,
+  });
 
-  const fetchData = useCallback(async () => {
-    try {
-      const [usersRes, requestsRes] = await Promise.all([
-        axios.get(`${API}/users`, { withCredentials: true }),
-        axios.get(`${API}/role-requests`, { withCredentials: true }),
-      ]);
-      setUsers(usersRes.data);
-      setRoleRequests(requestsRes.data);
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to load data");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { data: roleRequests = [], isLoading: rLoad } = useQuery({
+    queryKey: ["roleRequests"],
+    queryFn: async () => (await axiosSecure.get("/role-requests")).data,
+  });
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  // Mutations
+  const { mutate: updateStatus } = useMutation({
+    mutationFn: ({ requestId, status }) => axiosSecure.patch(`/role-requests/${requestId}`, { status }),
+    onSuccess: (_, { status }) => {
+      queryClient.invalidateQueries(["roleRequests", "users"]);
+      toast.success(`Request ${status} successfully`);
+    },
+    onError: () => toast.error("Failed to update status"),
+  });
 
-  // Admin approves or rejects a pending role request
-  const handleStatusUpdate = async (requestId, status) => {
-    try {
-      await axios.patch(
-        `${API}/role-requests/${requestId}`,
-        { status },
-        { withCredentials: true }
-      );
-      toast.success(`Request ${status}`);
-      fetchData(); // refresh both lists
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to update request");
-    }
-  };
+  const { mutate: removeUser } = useMutation({
+    mutationFn: (id) => axiosSecure.delete(`/users/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
+      toast.success("User deleted successfully");
+    },
+  });
 
-  // Admin removes a user — uses sonner confirm pattern (no window.confirm)
-  const handleRemoveUser = (userId) => {
-    toast("Are you sure you want to remove this user?", {
-      action: {
-        label: "Remove",
-        onClick: async () => {
-          try {
-            await axios.delete(`${API}/users/${userId}`, { withCredentials: true });
-            setUsers((prev) => prev.filter((u) => u._id !== userId));
-            toast.error("User removed permanently");
-          } catch (err) {
-            toast.error(err?.response?.data?.message || "Failed to remove user");
-          }
-        },
-      },
-      cancel: {
-        label: "Cancel",
-        onClick: () => {},
-      },
-    });
-  };
+  if (uLoad || rLoad) return <Loading text="Loading users..." />;
 
   return (
-    <section className="space-y-6">
-      <Toaster position="top-center" richColors closeButton />
-      <DashboardSectionHeader title="Manage Users" />
+    <section className="mt-6 space-y-4">
+      <div className="flex justify-between items-center px-1">
+        <DashboardSectionHeader title="Manage Users" className="mb-0" />
+        <Badge variant="secondary" className="gap-1.5 px-3 py-1 font-semibold">
+          <Users className="h-3.5 w-3.5" /> {users.length} Users
+        </Badge>
+      </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center h-48 text-muted-foreground text-sm">
-          Loading users...
-        </div>
-      ) : (
-        <div className="bg-white rounded-md">
-          <ManageUsersTable
-            users={users}
-            roleRequests={roleRequests}
-            onStatusUpdate={handleStatusUpdate}
-            onRemove={handleRemoveUser}
-          />
-        </div>
-      )}
+      <ManageUsersTable
+        users={users}
+        roleRequests={roleRequests}
+        onStatusUpdate={(requestId, status) => updateStatus({ requestId, status })}
+        onRemove={removeUser}
+      />
     </section>
   );
 };
 
-export default ManageUsers;
+export default ManageUsersPage;

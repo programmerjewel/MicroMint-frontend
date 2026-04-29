@@ -43,7 +43,7 @@ const AdminStats = () => {
     },
     {
       title: "Total Payments",
-      value: stats.totalPayments !== undefined ? `$${stats.totalPayments.toFixed(2)}` : null,
+      value: stats.totalPaymentsUSD !== undefined ? `$${stats.totalPaymentsUSD.toFixed(2)}` : null,
       icon: Wallet,
       color: "text-emerald-600",
       bgColor: "bg-emerald-100",

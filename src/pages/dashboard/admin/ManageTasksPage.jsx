@@ -27,7 +27,7 @@ const ManageTasksPage = () => {
   }
 
   return (
-    <section className="">
+    <section className="mt-6">
       <div className="flex justify-between items-center">
         <DashboardSectionHeader title="Manage All Tasks" className="mb-2"/>
         <Badge variant="secondary">Total Tasks: {tasks.length}</Badge>
