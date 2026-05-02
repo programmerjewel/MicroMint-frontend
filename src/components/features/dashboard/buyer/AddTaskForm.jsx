@@ -115,18 +115,16 @@ const AddTaskForm = () => {
             </div>
             {/* Payable Amount */}
             <div className="space-y-2">
-              <Label htmlFor="payable_amount">Payable Amount (Per Worker)</Label>
+              <Label htmlFor="payable_amount">Payable Amount (coins per worker)</Label>
               <Input 
                 {...register("payable_amount", { required: true, min: 0.01 })}
                 id="payable_amount" 
                 type="number" 
                 step="0.01" 
-                placeholder="ex: 10"
+                placeholder="ex: 10 coin"
               />
             </div>
           </div>
-
-        
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Completion Date */}

@@ -4,9 +4,9 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Check, X } from "lucide-react";
 import { LiaCoinsSolid } from "react-icons/lia";
 import { Badge } from "@/components/ui/badge";
-import ConfirmDeleteModal from "@/components/shared/ConfirmDeleteModal";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { cn } from "@/lib/utils";
+import ConfirmActionModal from "@/components/shared/ConfirmActionModal";
 
 const roleStyles = {
   admin: "bg-rose-50 text-rose-600 border-rose-200",
@@ -60,22 +60,41 @@ const ManageUsersTableRow = ({ user, roleRequest, onStatusUpdate, onRemove }) =>
       <TableCell className='text-center'>
         {status === "pending" ? (
           <div className="flex gap-2 justify-center items-center">
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              onClick={() => onStatusUpdate(roleRequest._id, "approved")} 
-              className="h-7 px-2 text-[10px] font-bold text-emerald-600 border border-emerald-100 hover:bg-emerald-50 gap-1"
-            >
-              <Check className="h-3 w-3" /> Approve
-            </Button>
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              onClick={() => onStatusUpdate(roleRequest._id, "rejected")} 
-              className="h-7 px-2 text-[10px] font-bold text-rose-500 border border-rose-100 hover:bg-rose-50 gap-1"
-            >
-              <X className="h-3 w-3" /> Reject
-            </Button>
+            
+            <ConfirmActionModal
+              title="Approve Role Request?"
+              description={`Are you sure you want to upgrade this user to ${roleRequest.requestedRole}?`}
+              confirmText="Yes, Approve"
+              variant="success"
+              onConfirm={() => onStatusUpdate(roleRequest._id, "approved")}
+              trigger={
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="h-7 px-2 text-[10px] font-bold text-emerald-600 border border-emerald-100 hover:bg-emerald-50 gap-1"
+                >
+                  <Check className="h-3 w-3" /> Approve
+                </Button>
+              }
+            />
+
+            <ConfirmActionModal
+              title="Reject Request?"
+              description="This will decline the user's request for a role change."
+              confirmText="Confirm Reject"
+              variant="destructive"
+              onConfirm={() => onStatusUpdate(roleRequest._id, "rejected")}
+              trigger={
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="h-7 px-2 text-[10px] font-bold text-rose-500 border border-rose-100 hover:bg-rose-50 gap-1"
+                >
+                  <X className="h-3 w-3" /> Reject
+                </Button>
+              }
+            />
+            
           </div>
         ) : (
           <span className="text-slate-300 text-[10px] italic">No active request</span>
@@ -85,7 +104,7 @@ const ManageUsersTableRow = ({ user, roleRequest, onStatusUpdate, onRemove }) =>
 
       
       <TableCell className="text-center pr-5">
-        <ConfirmDeleteModal
+        <ConfirmActionModal
           title="Delete User?"
           trigger={
             <Button 

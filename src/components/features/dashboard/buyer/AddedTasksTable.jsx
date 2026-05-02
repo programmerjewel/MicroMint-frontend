@@ -15,10 +15,10 @@ const AddedTasksTable = ({ tasks, onUpdate, onDelete }) => {
       <Table>
         <TableHeader className="bg-slate-50">
           <TableRow>
-            <TableHead>Task Info</TableHead>
-            <TableHead>Deadline</TableHead>
-            <TableHead>Payable</TableHead>
-            <TableHead>Workers</TableHead>
+            <TableHead className='w-[40%]'>Task Info</TableHead>
+            <TableHead className='w-[20%]'>Deadline</TableHead>
+            <TableHead className='w-[15%]'>Payable Amount</TableHead>
+            <TableHead className='w-[10%] text-right'>Workers</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>

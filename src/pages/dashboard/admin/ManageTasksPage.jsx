@@ -19,7 +19,6 @@ const ManageTasksPage = () => {
       return res.data;
     }
   })
-  console.log(tasks)
 
   if(isLoading) return <Loading text='Data is in progres...' size='md'/>
   if (isError) {

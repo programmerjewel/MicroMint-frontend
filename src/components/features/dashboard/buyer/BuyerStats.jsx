@@ -29,7 +29,8 @@ const statsCards = [
       format: (v) => v,
     },
     {
-      key: "totalPaymentsPaid",
+      key: "totalPaymentsPaidDollar",
+      title: "Total Pay",
       description: "Total amount paid out",
       icon: CreditCard,
       color: "text-emerald-600",

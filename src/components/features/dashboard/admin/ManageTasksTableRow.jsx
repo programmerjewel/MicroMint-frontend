@@ -3,7 +3,7 @@ import { Calendar } from "lucide-react";
 import { GoPeople } from 'react-icons/go';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { LiaCoinsSolid } from 'react-icons/lia';
-import ConfirmDeleteModal from "@/components/shared/ConfirmDeleteModal";
+import ConfirmActionModal from "@/components/shared/ConfirmActionModal";
 
 const ManageTasksTableRow = ({ task, onDelete }) => {
   return (
@@ -59,7 +59,7 @@ const ManageTasksTableRow = ({ task, onDelete }) => {
       </TableCell>
 
       <TableCell className="text-right">
-        <ConfirmDeleteModal 
+        <ConfirmActionModal 
           title="Delete Task?"
           description={
             <>

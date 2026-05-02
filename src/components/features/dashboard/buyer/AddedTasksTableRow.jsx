@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
+import { LiaCoinsSolid } from "react-icons/lia";
 
 const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
   const [open, setOpen] = useState(false);
@@ -22,7 +23,7 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     defaultValues: task,
   });
@@ -30,6 +31,10 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
   const todayDateStr = new Date().toISOString().split("T")[0];
 
   const onSubmit = async (data) => {
+    if(!isDirty){
+      setOpen(false);
+      return;
+    }
     try {
       await onUpdate(task._id, {
         ...data,
@@ -38,8 +43,6 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
       });
       setOpen(false);
     } catch (err) {
-      // We keep a console error for the developer, 
-      // but the UI stays clean as per your request.
       console.error("Update failed:", err.response?.data?.message);
     }
   };
@@ -56,7 +59,7 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
           <span className="font-bold text-slate-900 leading-none">
             {task.task_title}
           </span>
-          <p className="text-sm text-slate-500 truncate max-w-75" title={task.task_detail}>
+          <p className="text-sm text-slate-500 truncate max-w-80" title={task.task_detail}>
             {task.task_detail}
           </p>
         </div>
@@ -67,10 +70,13 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
       </TableCell>
 
       <TableCell className="font-semibold text-emerald-600">
-        ${task.payable_amount}
+        <div className="flex items-center justify-center gap-2">
+          <LiaCoinsSolid className="h-5 w-5" />
+          <span>{task.payable_amount.toFixed(2)}</span>
+        </div>
       </TableCell>
 
-      <TableCell className="text-slate-600 font-medium">
+      <TableCell className="text-slate-600 font-medium text-center">
         {task.required_workers}
       </TableCell>
 
@@ -171,7 +177,7 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
                   <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting || !isDirty} className={!isDirty ? "opacity-50 cursor-not-allowed" : ""}>
                     {isSubmitting ? "Saving..." : "Save Changes"}
                   </Button>
                 </DialogFooter>
