@@ -1,13 +1,17 @@
-import React from "react";
+
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import useAuth from "@/hooks/useAuth";
+import useCoin from "@/hooks/useCoin";
+import useRole from "@/hooks/useRole";
+import { LiaCoinsSolid } from "react-icons/lia";
+import UserDropdown from "@/components/shared/UserDropdown";
+import { CoinBadge } from "@/components/shared/CoinBadge";
+
 
 const DashboardHeader = () => {
- 
-  const {user} = useAuth();
-  // console.log(user)
+  const { role } = useRole();
+  const { coins } = useCoin();
 
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 bg-white">
@@ -22,27 +26,20 @@ const DashboardHeader = () => {
 
       {/* Right Side */}
       <div className="flex items-center h-full">
-        <div className="flex flex-col items-end px-4 text-sm border-r h-fit">
-          <span className="font-medium text-gray-700">
-            Available coin |{" "}
-            <span className="font-semibold text-gray-900">
-              {user.coins}
-            </span>
-          </span>
+        <div className="flex flex-col gap-1.5 items-end px-4 text-sm border-r h-fit">
+          <div className="flex gap-1 font-bold text-gray-800">
+            <LiaCoinsSolid className="text-amber-600" size={20}/>
+            {coins} | Coin
+          </div>
 
-          <span className="text-gray-500 text-xs">
-            {user.role} | {user?.displayName}
+          <span className="text-gray-500 text-sm font-medium capitalize">
+            {role} | Role
           </span>
         </div>
 
         {/* User Image */}
-        <div className="px-4">
-          <img
-            src={user?.photoURL}
-            alt="User"
-            referrerPolicy="no-referrer"
-            className="w-8 h-8 rounded-full object-cover"
-          />
+        <div className="pl-2">
+           <UserDropdown align="end" variant="dashboard" />
         </div>
 
         <Button
