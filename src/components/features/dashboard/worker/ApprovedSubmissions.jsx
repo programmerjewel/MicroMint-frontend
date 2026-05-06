@@ -15,7 +15,7 @@ const ApprovedSubmissions = () => {
       return data
     }
   })
-  console.log(submissions)
+  
   if(isLoading) return <Loading variant="fullscreen" text="Fetching task..." size="xl"/>
 
   const approvedSubmissions = submissions.filter(

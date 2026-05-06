@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { LiaCoinsSolid } from "react-icons/lia";
 
 const TaskCard = ({ task }) => {
   const navigate = useNavigate();
@@ -45,9 +46,11 @@ const TaskCard = ({ task }) => {
         
         {/* Floating Price Tag */}
         <div className="absolute top-3 right-3">
-          <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1 border border-white/20">
-            <DollarSign className="h-3.5 w-3.5 text-emerald-600" />
-            <span className="text-sm font-bold text-slate-900">{payable_amount.toFixed(2)}</span>
+          <div className="bg-amber-100 text-amber-900 backdrop-blur-md px-2 py-1 rounded-full shadow-sm flex items-center gap-1 border border-white/20">
+            <div className="flex items-center justify-center gap-2">
+              <LiaCoinsSolid className="h-4 w-4 text-amber-600" />
+              <span className="text-xs font-bold">{payable_amount}</span>
+            </div>
           </div>
         </div>
 

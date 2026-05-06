@@ -7,11 +7,9 @@ import useAuth from "@/hooks/useAuth";
 import Loading from "@/components/shared/Loading";
 
 const DashboardLayout = () => {
-  const { user, loading } = useAuth();
+  const { user} = useAuth();
 
-    if (loading) {
-      return <Loading variant="fullscreen" text="Verifying session..." size="xl" />;
-    }
+   
 
     if (!user) {
       return <Navigate to="/login" replace />;

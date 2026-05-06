@@ -8,7 +8,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 //Skeleton Loader - Matches the exact layout of the real cards
- 
 export const WorkerStatsSkeleton = () => {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -32,9 +31,10 @@ const WorkerStats = ({ stats = {} }) => {
   const {
     totalSubmissions = 0,
     totalPendingSubmissions = 0,
-    totalEarnings = 0,
+    totalEarningsDollar = 0,
   } = stats;
 
+  //UI stats card
   const statsCards = [
     {
       title: "Total Submissions",
@@ -54,7 +54,7 @@ const WorkerStats = ({ stats = {} }) => {
     },
     {
       title: "Total Earnings",
-      value: `$${totalEarnings.toFixed(2)}`,
+      value: `$${totalEarningsDollar.toFixed(2)}`,
       description: "From approved tasks",
       icon: DollarSign,
       color: "text-green-600",

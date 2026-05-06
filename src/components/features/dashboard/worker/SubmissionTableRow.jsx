@@ -1,11 +1,12 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { RotateCcw, CheckCircle2, Clock, AlertCircle, Ban } from "lucide-react";
 import SubmissionDetailsModal from "./SubmissionDetailsModal";
-import CancelSubmissionModal from "./CancelSubmissionModal";
+import { LiaCoinsSolid } from "react-icons/lia";
+import ConfirmActionModal from "@/components/shared/ConfirmActionModal";
 
 const SubmissionTableRow = ({ submission, onCancel }) => {
   const { _id, task_id, task_title, buyer, payable_amount, status } =
@@ -24,9 +25,10 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
       <TableCell className="font-medium text-gray-900">{task_title}</TableCell>
       <TableCell className="text-gray-600">{buyer.name}</TableCell>
       <TableCell>
-        <span className="font-bold text-emerald-600">
-          ${payable_amount.toFixed(2)}
-        </span>
+        <div className="flex items-center justify-center gap-2">
+          <LiaCoinsSolid className="h-5 w-5 text-amber-600" />
+          <span className="font-semibold text-gray-600">{payable_amount}</span>
+        </div>
       </TableCell>
       <TableCell>
         <Badge
@@ -42,7 +44,22 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
 
       <TableCell className="text-right">
         {status === "pending" ? (
-          <CancelSubmissionModal submissionId={_id} onCancel={onCancel} />
+          <ConfirmActionModal
+            title="Confirm Cancellation"
+            description="This will remove your submission. If the task has limited spots, someone else might take your place."
+            confirmText="Confirm Cancel"
+            variant="destructive"
+            onConfirm={() => onCancel(_id)} // Pass the submission ID here
+            trigger={
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs border-gray-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-all"
+              >
+                <Ban className="w-3.5 h-3.5 mr-1" /> Cancel
+              </Button>
+            }
+          />
         ) : status === "approved" ? (
           <SubmissionDetailsModal submission={submission} />
         ) : (

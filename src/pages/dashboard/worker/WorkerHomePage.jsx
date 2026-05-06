@@ -17,7 +17,6 @@ const WorkerHomePage = () => {
     enabled: !!user?.email,
   })
 
-  console.log(stats);
 
   return (
     <section className="space-y-6">

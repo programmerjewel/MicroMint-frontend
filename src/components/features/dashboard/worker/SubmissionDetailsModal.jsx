@@ -48,7 +48,7 @@ const SubmissionDetailsModal = ({ submission }) => {
               </div>
               <div className="text-right">
                 <label className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Amount</label>
-                <p className="text-sm font-bold text-emerald-600">${payable_amount.toFixed(2)}</p>
+                <p className="text-sm font-bold text-emerald-600">{payable_amount} Coins</p>
               </div>
             </div>
 

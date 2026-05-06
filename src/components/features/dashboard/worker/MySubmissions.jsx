@@ -20,7 +20,6 @@ const MySubmissions = () => {
       return data
     }
   })
-  console.log(submissions)
 
   //handle submit cancellation
   const {mutateAsync: cancelSubmission} = useMutation({

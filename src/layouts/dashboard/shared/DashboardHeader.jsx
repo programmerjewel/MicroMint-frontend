@@ -6,7 +6,6 @@ import useCoin from "@/hooks/useCoin";
 import useRole from "@/hooks/useRole";
 import { LiaCoinsSolid } from "react-icons/lia";
 import UserDropdown from "@/components/shared/UserDropdown";
-import { CoinBadge } from "@/components/shared/CoinBadge";
 
 
 const DashboardHeader = () => {
