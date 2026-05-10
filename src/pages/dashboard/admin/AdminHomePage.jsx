@@ -1,46 +1,46 @@
-import { useState } from 'react';
+
 import { toast, Toaster } from "sonner";
 import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
 import WithdrawRequestTable from '@/components/features/dashboard/admin/WithdrawRequestTable';
 import AdminStats from '@/components/features/dashboard/admin/AdminStats';
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Loading from "@/components/shared/Loading";
 
 const AdminHome = () => {
-  // Dummy Withdrawal Data
-  const [withdrawRequests, setWithdrawRequests] = useState([
-    {
-      _id: "w_01",
-      worker_name: "Mahmud Hasan",
-      worker_email: "mahmud@worker.com",
-      withdrawal_coin: 1000,
-      withdrawal_amount: 10.00,
-      payment_system: "bKash",
-      account_number: "01700000000",
-      status: "pending"
-    },
-    {
-      _id: "w_02",
-      worker_name: "Sarah Sky",
-      worker_email: "sarah@worker.com",
-      withdrawal_coin: 500,
-      withdrawal_amount: 5.00,
-      payment_system: "Nagad",
-      account_number: "01800000000",
-      status: "pending"
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient(); 
+
+  //fetch all pending withdrawals
+  const { data: withdrawRequests = [], isLoading} = useQuery({
+    queryKey: ["withdrawRequests"],
+    queryFn: async () =>{
+      const {data} = await axiosSecure.get('/admin/withdrawals');
+      return data;
     }
-  ]);
+  })
 
-  const handleApproveWithdrawal = (request) => {
-    // 1. UPDATE LOGIC:
-    // In your real app, you would:
-    // axios.patch(`/withdraw/approve/${request._id}`, { email: request.worker_email, coins: request.withdrawal_coin })
 
-    // 2. UI Update: Remove from the pending list
-    setWithdrawRequests(prev => prev.filter(r => r._id !== request._id));
-
-    toast.success(`Payment Success!`, {
-      description: `Deducted ${request.withdrawal_coin} coins from ${request.worker_name}.`
-    });
+  //mutation for approval
+  const approveMutation = useMutation({
+    mutationFn: async ({ id, action }) =>{
+      const {data} = await axiosSecure.patch(`/admin/withdraw-process/${id}`, {action});
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["withdrawRequests"]);
+      toast.success(data.message || "Request processed successfully");
+    },
+    onError: (error) =>{
+      const errorMsg = error.response?.data?.message || "Failed to process request";
+    toast.error(errorMsg);
+    }
+  })
+  const handleProcessRequest = (request, action) => {
+    approveMutation.mutate({ id: request._id, action});
   };
+
+  if(isLoading) return <Loading />
 
   return (
     <section className="space-y-8">
@@ -61,7 +61,8 @@ const AdminHome = () => {
 
         <WithdrawRequestTable
           requests={withdrawRequests} 
-          onPaymentSuccess={handleApproveWithdrawal} 
+          onApprove={(req) => handleProcessRequest(req, 'approve')} 
+          onReject={(req) => handleProcessRequest(req, 'reject')}
         />
       </div>
     </section>

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import WithdrawRequestTableRow from "./WithdrawRequestTableRow";
 
-const WithdrawRequestTable = ({ requests = [], onPaymentSuccess }) => {
+const WithdrawRequestTable = ({ requests = [], onApprove, onReject }) => {
   return (
     <div className="rounded-md border bg-white shadow-sm overflow-hidden">
       <Table>
@@ -18,7 +18,6 @@ const WithdrawRequestTable = ({ requests = [], onPaymentSuccess }) => {
             <TableHead>Worker Details</TableHead>
             <TableHead>Withdraw Coins</TableHead>
             <TableHead>Payable Amount</TableHead>
-            <TableHead>Payment Method</TableHead>
             <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -37,7 +36,8 @@ const WithdrawRequestTable = ({ requests = [], onPaymentSuccess }) => {
               <WithdrawRequestTableRow 
                 key={request._id} 
                 request={request} 
-                onApprove={onPaymentSuccess} 
+                onApprove={onApprove} 
+                onReject={onReject}
               />
             ))
           )}

@@ -17,11 +17,12 @@ import LoginPage from "@/pages/public/auth/LoginPage";
 import ProfilePage from "@/pages/public/auth/ProfilePage";
 import RegisterPage from "@/pages/public/auth/RegisterPage";
 import ErrorPage from "@/pages/public/ErrorPage";
-import HomePage from "@/pages/public/Home";
+import HomePage from "@/pages/public/HomePage";
 import { createBrowserRouter } from "react-router-dom";
 import PrivateRoutes from "./PrivateRoutes";
 import DashboardIndexRedirect from "./DashboardIndexRedirect";
 import RoleGuard from "./RoleGuard";
+import AboutPage from "@/pages/public/AboutPage";
 
 const Routes = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const Routes = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/about",
+        element: <AboutPage/>
       },
       {
         path: "/profile",

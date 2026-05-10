@@ -1,4 +1,4 @@
-import React from 'react';
+
 import {
   Table,
   TableBody,
@@ -15,10 +15,10 @@ const PaymentHistoryTable = ({ payments = [] }) => {
       <Table>
         <TableHeader className="bg-slate-50">
           <TableRow>
-            <TableHead>Transaction ID</TableHead>
-            <TableHead>Coins Added</TableHead>
-            <TableHead>Amount Paid</TableHead>
-            <TableHead>Date</TableHead>
+            <TableHead className="w-[10%]">Worker</TableHead>
+            <TableHead>Task Title</TableHead>
+            <TableHead className="w-[10%]">Amount Paid</TableHead>
+            <TableHead className="w-[10%]">Approval Date</TableHead>
             <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
@@ -26,16 +26,14 @@ const PaymentHistoryTable = ({ payments = [] }) => {
           {payments.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
-                <div className="flex flex-col items-center gap-2">
-                  <p>No payment history found.</p>
-                  <p className="text-xs">Your purchases will appear here.</p>
-                </div>
+                <p>No payout history found.</p>
+                <p className="text-xs">Once you approve worker tasks, they will appear here.</p>
               </TableCell>
             </TableRow>
           ) : (
             payments.map((payment) => (
               <PaymentHistoryTableRow 
-                key={payment.transactionId} 
+                key={payment._id} 
                 payment={payment} 
               />
             ))

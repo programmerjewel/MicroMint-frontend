@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -16,10 +16,11 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const isSigningUp = useRef(false);
   const googleProvider = new GoogleAuthProvider();
 
   const createUser = (email, password) => {
+    isSigningUp.current = true;
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
@@ -34,23 +35,29 @@ export const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  const updateUser = async (name, image) => {
-    if (!auth.currentUser) return;
-    await updateProfile(auth.currentUser, { 
-        displayName: name, 
-        photoURL: image 
-    });
-    // 2. Sync with MongoDB immediately using PUT
-    const userInfo = {
-      name: name,
-      image: image,
-    };
-    await axiosSecure.patch(`/users/${auth.currentUser.email}`, userInfo);
-    // Crucial: Manually update local state with the new values
-    const updatedUser = { ...auth.currentUser, displayName: name, photoURL: image };
-    setUser(updatedUser);
-    return updatedUser;
-  };
+const updateUser = async (name, image, role = null) => {
+  if (!auth.currentUser) return;
+
+  await updateProfile(auth.currentUser, { displayName: name, photoURL: image });
+
+  // 1. JWT first
+  await axiosSecure.post("/jwt", { email: auth.currentUser.email });
+
+  // 2. Save user to DB
+  await axiosSecure.post("/users", {
+    name,
+    image,
+    email:    auth.currentUser.email,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    ...(role && { role }),
+  });
+
+  // 3. Set user state after token is ready
+  const updatedUser = { ...auth.currentUser, displayName: name, photoURL: image };
+  setUser(updatedUser);
+  isSigningUp.current = false;
+  return updatedUser;
+};
 
   const logoutUser = async () => {
     setLoading(true);
@@ -66,30 +73,41 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser?.email) {
-        try {
-          await axiosSecure.post("/jwt", { email: currentUser.email });
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
 
-          const userInfo = {
-            name: currentUser.displayName,
-            image: currentUser.photoURL,
-            email: currentUser.email,
-          };
-
-          await axiosSecure.post(`/users`, userInfo);
-          
-        } catch (err) {
-          console.error("Auth Sync Error:", err);
-        }
-      }
-
+    if (isSigningUp.current) {
       setLoading(false);
-    });
+      return;
+    }
 
-    return () => unsubscribe();
-  }, []);
+    if (currentUser?.email) {
+      try {
+        // 1. Get JWT first — before setUser triggers any protected API calls
+        await axiosSecure.post("/jwt", { email: currentUser.email });
+
+        const isGoogleUser = currentUser.providerData?.[0]?.providerId === "google.com";
+        if (isGoogleUser) {
+          await axiosSecure.post("/users", {
+            name:     currentUser.displayName,
+            image:    currentUser.photoURL,
+            email:    currentUser.email,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          });
+        }
+      } catch (err) {
+        console.error("Auth Sync Error:", err);
+      }
+    } else {
+      // Logged out — clear JWT cookie
+      await axiosSecure.post("/logout").catch(() => {});
+    }
+
+    // 2. Set user AFTER JWT is ready — components render with token already set
+    setUser(currentUser);
+    setLoading(false);
+  });
+  return () => unsubscribe();
+}, []);
 
   const authInfo = {
     user,

@@ -1,27 +1,34 @@
 import PaymentHistoryTable from "@/components/features/dashboard/buyer/PaymentHistoryTable";
 import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
-
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import useAuth from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "@/components/shared/Loading";
 
 const PaymentHistoryPage = () => {
-  const dummyPayments = [
-    {
-      transactionId: "TXN-8K2L9P1X",
-      coinsAdded: 150,
-      amount: 10.00,
-      date: "2024-05-20T10:30:00Z"
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+
+  const { data: payments = [], isLoading } = useQuery({
+    queryKey: ["buyer-payouts", user?.email],
+    enabled: !!user?.email,
+
+    queryFn: async () => {
+
+      // Fetching payouts to workers 
+      const { data } = await axiosSecure.get(`/buyer-payments/${user?.email}`);
+      return data;
     },
-    {
-      transactionId: "TXN-3M5N7Q2W",
-      coinsAdded: 500,
-      amount: 20.00,
-      date: "2024-05-18T14:15:00Z"
-    }
-  ];
+  });
+
+  if (isLoading) return <Loading/>
   return (
-  <section>
-    <DashboardSectionHeader title='Payment History'/>
-    <PaymentHistoryTable payments={dummyPayments} />
-  </section>
+    <section>
+      <DashboardSectionHeader title="Worker Payout History" />
+      <div className="mt-6">
+        <PaymentHistoryTable payments={payments} />
+      </div>
+    </section>
   );
 };
 

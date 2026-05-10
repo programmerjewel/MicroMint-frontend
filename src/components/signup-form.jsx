@@ -24,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { axiosSecure } from "@/hooks/useAxiosSecure";
 
 export function SignupForm({ ...props }) {
   const [preview, setPreview] = useState(null);
@@ -52,17 +51,7 @@ export function SignupForm({ ...props }) {
 
       // Create user
       await createUser(data.email, data.password);
-      await updateUser(data.name, photoURL);
-
-      //add role on db save with the SPECIFIC role
-        const userInfo = {
-        name: data.name,
-        image: photoURL,
-        email: data.email,
-        role: data.role, 
-      };
-
-      await axiosSecure.post(`/users`, userInfo);
+      await updateUser(data.name, photoURL, data.role);
       navigate("/");
 
     } catch (error) {

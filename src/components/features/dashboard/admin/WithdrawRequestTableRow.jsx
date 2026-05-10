@@ -1,20 +1,11 @@
 
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, CreditCard } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { CheckCircle2, Eye, XCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-const WithdrawRequestTableRow = ({ request, onApprove }) => {
+
+const WithdrawRequestTableRow = ({ request, onApprove, onReject }) => {
   return (
     <TableRow>
       <TableCell>
@@ -29,42 +20,65 @@ const WithdrawRequestTableRow = ({ request, onApprove }) => {
       <TableCell className="font-semibold">
         ${request.withdrawal_amount.toFixed(2)}
       </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-2">
-          <CreditCard className="h-4 w-4 text-slate-400" />
-          <div className="flex flex-col text-xs">
-            <span className="font-bold">{request.payment_system}</span>
-            <span>{request.account_number}</span>
-          </div>
-        </div>
-      </TableCell>
-      <TableCell className="text-right">
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
-              <CheckCircle className="mr-2 h-4 w-4" /> Payment Success
+      <TableCell className="flex justify-end py-3">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <Eye className="h-4 w-4" /> Review
             </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Confirm Payment Success?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will mark the request as <strong>Approved</strong> and deduct 
-                <strong> {request.withdrawal_coin} coins</strong> from {request.worker_name}'s balance. 
-                Ensure you have sent ${request.withdrawal_amount} via {request.payment_system}.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction 
-                onClick={() => onApprove(request)}
-                className="bg-emerald-600 hover:bg-emerald-700"
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-106.25">
+            <DialogHeader>
+              <DialogTitle>Withdrawal Review</DialogTitle>
+              <DialogDescription>
+                Verify the details below before processing the payment.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4 border-y border-slate-100">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground text-sm">Requested By:</span>
+                <span className="font-medium text-sm">{request.worker_name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground text-sm">Payment Method:</span>
+                <span className="font-bold text-sm text-blue-600">{request.payment_system}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground text-sm">Account Number:</span>
+                <span className="font-mono bg-slate-100 px-2 py-1 rounded text-sm">
+                  {request.account_number}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground text-sm">Amount to Pay:</span>
+                <span className="font-bold text-lg text-emerald-600">${request.withdrawal_amount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground text-sm">Requested On:</span>
+                <span className="text-sm">
+                  {new Date(request.withdraw_date).toLocaleDateString()}
+                </span>
+              </div>
+            </div>
+
+            <DialogFooter className="flex flex-row justify-between sm:justify-between w-full gap-2">
+              <Button 
+                variant="destructive" 
+                onClick={() => onReject(request)}
+                className="flex-1"
               >
-                Confirm & Deduct
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+                <XCircle className="mr-2 h-4 w-4" /> Reject & Refund
+              </Button>
+              <Button 
+                onClick={() => onApprove(request)}
+                className="bg-emerald-600 hover:bg-emerald-700 flex-1"
+              >
+                <CheckCircle2 className="mr-2 h-4 w-4" /> Approve Payment
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </TableCell>
     </TableRow>
   );
