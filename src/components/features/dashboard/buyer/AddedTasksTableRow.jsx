@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { LiaCoinsSolid } from "react-icons/lia";
+import ConfirmActionModal from "@/components/shared/ConfirmActionModal";
 
 const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
   const [open, setOpen] = useState(false);
@@ -185,14 +186,22 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
             </DialogContent>
           </Dialog>
 
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => onDelete(task._id)}
-            className="h-9 w-9 text-red-600 border-red-100 hover:bg-red-50 hover:text-red-700 shadow-sm"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <ConfirmActionModal
+            title="Delete this task?"
+            description="Warning: Deleting this task will notify all workers with pending submissions that the task has been cancelled by the buyer."
+            confirmText="Yes, Delete Task"
+            variant="destructive"
+            onConfirm={() => onDelete(task._id)}
+            trigger={
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 text-red-600 border-red-100 hover:bg-red-50 hover:text-red-700 shadow-sm"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            }
+          />
         </div>
       </TableCell>
     </TableRow>

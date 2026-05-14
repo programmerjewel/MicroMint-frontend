@@ -43,6 +43,25 @@ const AllTasksPage = () => {
   };
 
 
+  //delete task mutation
+  const { mutateAsync: deleteTask } = useMutation({
+    mutationFn: async (id) => {
+      const {data} = await axiosSecure.delete(`/tasks/${id}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["tasks", user?.email]);
+      toast.success("Task deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Failed to delete task");
+    }
+  })
+
+  const handleDelete = async (id) => {
+    await deleteTask(id)
+  }
+
   if (isLoading) return <Loading text='Loading tasks...' size='md'/>;
   return (
     <section>
@@ -50,7 +69,7 @@ const AllTasksPage = () => {
       <AddedTasksTable
         tasks={tasks} 
         onUpdate={handleUpdate} 
-        // onDelete={handleDelete} 
+        onDelete={handleDelete} 
       />
     </section>
   );

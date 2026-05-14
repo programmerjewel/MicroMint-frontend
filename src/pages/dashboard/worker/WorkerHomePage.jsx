@@ -1,5 +1,5 @@
 import ApprovedSubmissions from '@/components/features/dashboard/worker/ApprovedSubmissions';
-import WorkerStats, { WorkerStatsSkeleton } from '@/components/features/dashboard/worker/workerStats';
+import WorkerStats, { WorkerStatsSkeleton } from '@/components/features/dashboard/worker/WorkerStats';
 import DashboardSectionHeader from '@/components/ui/dashboard-section-header';
 import useAuth from '@/hooks/useAuth';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
