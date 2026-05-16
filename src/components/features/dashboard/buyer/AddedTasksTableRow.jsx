@@ -73,7 +73,7 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
       <TableCell className="font-semibold text-emerald-600">
         <div className="flex items-center justify-center gap-2">
           <LiaCoinsSolid className="h-5 w-5" />
-          <span>{task.payable_amount.toFixed(2)}</span>
+          <span>{task.payable_amount}</span>
         </div>
       </TableCell>
 

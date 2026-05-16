@@ -8,6 +8,8 @@ import useAuth from "@/hooks/useAuth";
 import useCoin from "@/hooks/useCoin";
 import { CoinBadge } from "@/components/shared/CoinBadge";
 import UserDropdown from "@/components/shared/UserDropdown";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import Logo from "@/components/shared/Logo";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -147,9 +149,8 @@ const Navbar = () => {
       <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between gap-4">
-
             <Link to="/" className="shrink-0">
-              <img src="/MicromintLogo.svg" alt="Logo" className="h-6 w-auto" />
+              <Logo className="h-7 w-auto" />
             </Link>
 
             {/* Desktop Nav Links */}
@@ -160,6 +161,7 @@ const Navbar = () => {
             {/* Desktop Actions */}
             <div className="hidden md:flex items-center gap-3">
               <JoinDeveloperButton />
+              <ThemeToggle/>
               <div className="h-6 w-px bg-border mx-1 hidden lg:block" />
               <AuthSection user={user} coins={coins} />
             </div>
@@ -183,6 +185,9 @@ const Navbar = () => {
           isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
         )}>
         <div className="flex flex-col p-6 pt-24 space-y-6 h-full">
+          <div className="absolute top-5 left-6">
+             <ThemeToggle />
+          </div>
           <div className="flex flex-col space-y-3">
             <NavLinks mobile onNavigate={close} />
           </div>

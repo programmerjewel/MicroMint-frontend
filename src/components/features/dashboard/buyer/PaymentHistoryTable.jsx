@@ -11,15 +11,15 @@ import PaymentHistoryTableRow from "./PaymentHistoryTableRow";
 
 const PaymentHistoryTable = ({ payments = [] }) => {
   return (
-    <div className="rounded-md border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-md border shadow-sm overflow-hidden">
       <Table>
-        <TableHeader className="bg-slate-50">
+        <TableHeader>
           <TableRow>
             <TableHead className="w-[10%]">Worker</TableHead>
-            <TableHead>Task Title</TableHead>
+            <TableHead className="w-[60%]">Task Title</TableHead>
             <TableHead className="w-[10%]">Amount Paid</TableHead>
             <TableHead className="w-[10%]">Approval Date</TableHead>
-            <TableHead className="text-right">Status</TableHead>
+            <TableHead className="text-right w-[10%]">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

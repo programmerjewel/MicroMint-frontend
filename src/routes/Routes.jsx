@@ -23,6 +23,8 @@ import PrivateRoutes from "./PrivateRoutes";
 import DashboardIndexRedirect from "./DashboardIndexRedirect";
 import RoleGuard from "./RoleGuard";
 import AboutPage from "@/pages/public/AboutPage";
+import ForgetPasswordPage from "@/pages/public/auth/ForgetPasswordPage";
+import ResetPasswordPage from "@/pages/public/auth/ResetPasswordPage";
 
 const Routes = createBrowserRouter([
   {
@@ -51,6 +53,14 @@ const Routes = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/forget-password",
+    element: <ForgetPasswordPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage />,
   },
   {
     path: "/dashboard",

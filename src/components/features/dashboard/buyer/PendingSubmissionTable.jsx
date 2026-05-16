@@ -11,7 +11,7 @@ import PendingSubmissionTableRow from "./PendingSubmissionTableRow";
 
 const PendingSubmissionTable = ({ submissions = [], onApprove, onReject }) => {
   return (
-    <div className="rounded-md border bg-white shadow-sm">
+    <div className="rounded-md border shadow-sm">
       <Table>
         <TableHeader>
           <TableRow>

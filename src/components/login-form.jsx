@@ -25,8 +25,8 @@ export function LoginForm({ className, onFormSubmit, onGoogleLogin, ...props }) 
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle>Welcome back</CardTitle>
-          <CardDescription>Login with your Google account</CardDescription>
+          <CardTitle className="uppercase font-semibold tracking-tighter">Welcome back</CardTitle>
+          <CardDescription className="pb-2">Login with your Google account</CardDescription>
         </CardHeader>
         <CardContent>
           {/* We pass the local handleSubmit to the prop from the parent */}
@@ -58,9 +58,9 @@ export function LoginForm({ className, onFormSubmit, onGoogleLogin, ...props }) 
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
+                  <Link to="/forget-password" className="ml-auto text-sm underline-offset-4 hover:underline">
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
                 <Input 
                   id="password" 

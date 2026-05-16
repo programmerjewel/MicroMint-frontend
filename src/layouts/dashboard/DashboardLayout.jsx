@@ -22,7 +22,7 @@ const DashboardLayout = () => {
 
         <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
           <DashboardHeader />
-          <main className="flex-1 p-6 bg-slate-50/50">
+          <main className="flex-1 p-6">
             <Outlet />
           </main>
           <DashboardFooter />

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, CheckCircle2, Clock, AlertCircle, Ban } from "lucide-react";
+import { RotateCcw, CheckCircle2, Clock, AlertCircle, Ban, Trash2 } from "lucide-react";
 import SubmissionDetailsModal from "./SubmissionDetailsModal";
 import { LiaCoinsSolid } from "react-icons/lia";
 import ConfirmActionModal from "@/components/shared/ConfirmActionModal";
@@ -16,6 +16,7 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
     pending: "bg-amber-50 text-amber-700 border-amber-200",
     approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
     rejected: "bg-rose-50 text-rose-700 border-rose-200",
+    "cancelled by buyer": "bg-slate-100 text-slate-600 border-slate-300 italic",
   };
 
   const currentStyle = statusStyles[status] || "bg-gray-50 text-gray-600";
@@ -38,6 +39,7 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
           {status === "pending" && <Clock className="w-3 h-3" />}
           {status === "approved" && <CheckCircle2 className="w-3 h-3" />}
           {status === "rejected" && <AlertCircle className="w-3 h-3" />}
+          {status === "cancelled by buyer" && <Trash2 className="w-3 h-3" />}
           {status}
         </Badge>
       </TableCell>
@@ -53,7 +55,7 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
             trigger={
               <Button
                 variant="outline"
-                size="sm"
+                size="xs"
                 className="text-xs border-gray-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-all"
               >
                 <Ban className="w-3.5 h-3.5 mr-1" /> Cancel
@@ -63,16 +65,26 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
         ) : status === "approved" ? (
           <SubmissionDetailsModal submission={submission} />
         ) : (
-          /* status === "rejected" */
-          <Link to={`/dashboard/tasks/${task_id}`}>
+          status === "rejected" ? (<Link to={`/dashboard/tasks/${task_id}`}>
             <Button
               variant="outline"
-              size="sm"
+              size="xs"
               className="text-xs border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300 transition-all shadow-sm"
             >
               <RotateCcw className="w-3.5 h-3.5 mr-1" /> Resubmit
             </Button>
           </Link>
+          ) : (
+            /* status === "cancelled by buyer" */
+            <Button
+            variant="ghost"
+            size="sm"
+            disabled
+            className="text-xs text-slate-400 cursor-not-allowed italic"
+          >
+            No Actions Available
+          </Button>
+          )
         )}
       </TableCell>
     </TableRow>

@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle2} from "lucide-react";
 
 const PaymentHistoryTableRow = ({ payment }) => {
-  console.log(payment)
   return (
     <TableRow>
       <TableCell>
@@ -16,8 +15,8 @@ const PaymentHistoryTableRow = ({ payment }) => {
         </div>
       </TableCell>
       
-      <TableCell>
-        <span className="text-sm line-clamp-1 max-w-50 truncate">{payment.task_title}</span>
+      <TableCell className="max-w-50 md:max-w-75">
+        <span className="text-sm line-clamp-1 w-full truncate block font-medium">{payment.task_title}</span>
       </TableCell>
 
       <TableCell className="font-bold text-emerald-600">

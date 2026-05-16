@@ -1,8 +1,10 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import {
+  confirmPasswordReset,
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -35,29 +37,29 @@ export const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-const updateUser = async (name, image, role = null) => {
-  if (!auth.currentUser) return;
+  const updateUser = async (name, image, role = null) => {
+    if (!auth.currentUser) return;
 
-  await updateProfile(auth.currentUser, { displayName: name, photoURL: image });
+    await updateProfile(auth.currentUser, { displayName: name, photoURL: image });
 
-  // 1. JWT first
-  await axiosSecure.post("/jwt", { email: auth.currentUser.email });
+    // 1. JWT first
+    await axiosSecure.post("/jwt", { email: auth.currentUser.email });
 
-  // 2. Save user to DB
-  await axiosSecure.post("/users", {
-    name,
-    image,
-    email:    auth.currentUser.email,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    ...(role && { role }),
-  });
+    // 2. Save user to DB
+    await axiosSecure.post("/users", {
+      name,
+      image,
+      email:    auth.currentUser.email,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      ...(role && { role }),
+    });
 
-  // 3. Set user state after token is ready
-  const updatedUser = { ...auth.currentUser, displayName: name, photoURL: image };
-  setUser(updatedUser);
-  isSigningUp.current = false;
-  return updatedUser;
-};
+    // 3. Set user state after token is ready
+    const updatedUser = { ...auth.currentUser, displayName: name, photoURL: image };
+    setUser(updatedUser);
+    isSigningUp.current = false;
+    return updatedUser;
+  };
 
   const logoutUser = async () => {
     setLoading(true);
@@ -72,6 +74,17 @@ const updateUser = async (name, image, role = null) => {
     }
   };
 
+  // ... reset password request
+const resetPassword = (email) => {
+  setLoading(true);
+  return sendPasswordResetEmail(auth, email);
+};
+
+//confirm reset password
+const confirmNewPassword = (code, newPassword) => {
+    setLoading(true);
+    return confirmPasswordReset(auth, code, newPassword);
+  };
   useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
 
@@ -117,6 +130,8 @@ const updateUser = async (name, image, role = null) => {
     loginWithGoogle,
     updateUser,
     logoutUser,
+    resetPassword,
+    confirmNewPassword
   };
 
   return (
