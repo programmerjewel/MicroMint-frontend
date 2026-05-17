@@ -1,9 +1,9 @@
-import { toast } from "sonner";
 import DashboardSectionHeader from "@/components/ui/dashboard-section-header";
 import ManageUsersTable from "@/components/features/dashboard/admin/ManageUsersTable";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Loading from "@/components/shared/Loading";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 
@@ -33,11 +33,17 @@ const ManageUsersPage = () => {
   });
 
   const { mutate: removeUser } = useMutation({
-    mutationFn: (id) => axiosSecure.delete(`/users/${id}`),
+    
+    mutationFn: (email) => axiosSecure.delete(`/users/${email}`), 
     onSuccess: () => {
+      //refresh user list after successful deletion
       queryClient.invalidateQueries(["users"]);
-      toast.success("User deleted successfully");
+      toast.success("User deleted successfully from Firebase and Database");
     },
+    onError: (error) => {
+      const message = error.response?.data?.message || "Failed to delete user";
+      toast.error(message);
+    }
   });
 
   if (uLoad || rLoad) return <Loading text="Loading users..." />;

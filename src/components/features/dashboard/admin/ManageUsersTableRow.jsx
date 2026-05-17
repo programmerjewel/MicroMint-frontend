@@ -15,7 +15,7 @@ const roleStyles = {
 };
 
 const ManageUsersTableRow = ({ user, roleRequest, onStatusUpdate, onRemove }) => {
-  const { _id, name, email, image, role, coins } = user;
+  const { name, email, image, role, coins } = user;
   const status = roleRequest?.status?.toLowerCase();
 
   return (
@@ -116,7 +116,7 @@ const ManageUsersTableRow = ({ user, roleRequest, onStatusUpdate, onRemove }) =>
               <RiDeleteBin5Fill className="h-3.5 w-3.5" />
             </Button>
           }
-          onConfirm={() => onRemove(_id)}
+          onConfirm={() => onRemove(email)}
         />
       </TableCell>
     </TableRow>

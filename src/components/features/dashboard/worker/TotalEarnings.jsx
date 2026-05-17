@@ -3,8 +3,8 @@ import { DollarSign } from "lucide-react";
 import { LiaCoinsSolid } from "react-icons/lia";
 
 const TotalEarnings = ({ coins = 0 }) => {
-  const COIN_RATE = parseInt(import.meta.env.VITE_COIN_TO_DOLLAR_RATE) || 10;
-  const totalDollars = coins / COIN_RATE;
+  const WITHDRAW_COIN_TO_DOLLAR_RATE = parseInt(import.meta.env.VITE_WITHDRAW_COIN_TO_DOLLAR_RATE);
+  const totalDollars = coins / WITHDRAW_COIN_TO_DOLLAR_RATE;
 
   return (
     <div className="border border-slate-200 rounded-2xl overflow-hidden p-4">

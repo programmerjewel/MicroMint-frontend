@@ -1,10 +1,10 @@
-import { AlertCircle, Clock, HelpCircle, MessageCircle, ShieldCheck, TrendingUp, UserCheck } from 'lucide-react';
-import React from 'react';
+import { AlertCircle, Clock, MessageCircle, ShieldCheck, TrendingUp, UserCheck } from 'lucide-react';
+
 
 const WithdrawInfo = () => {
-  const COIN_RATE = parseInt(import.meta.env.VITE_COIN_TO_DOLLAR_RATE);
+  const WITHDRAW_COIN_TO_DOLLAR_RATE = parseInt(import.meta.env.VITE_WITHDRAW_COIN_TO_DOLLAR_RATE);
   const MIN_WITHDRAW_COINS = 200;
-  const MIN_WITHDRAW_DOLLARS = (MIN_WITHDRAW_COINS / COIN_RATE).toFixed(2);
+  const MIN_WITHDRAW_DOLLARS = (MIN_WITHDRAW_COINS / WITHDRAW_COIN_TO_DOLLAR_RATE).toFixed(2);
   return (
     <div className="mt-8 rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-white">
         {/* Header with gradient accent */}
@@ -33,7 +33,7 @@ const WithdrawInfo = () => {
                   <p className="text-sm font-bold text-slate-800">Dynamic Exchange Rate</p>
                   <p className="text-xs text-slate-600 leading-relaxed mt-1">
                     The coin-to-dollar conversion rate is updated based on platform economics. 
-                    Current rate: <span className="font-mono font-semibold">1 coin = ${(1/COIN_RATE).toFixed(4)} USD</span>
+                    Current rate: <span className="font-mono font-semibold">1 coin = ${(1/WITHDRAW_COIN_TO_DOLLAR_RATE).toFixed(4)} USD</span>
                   </p>
                 </div>
               </div>

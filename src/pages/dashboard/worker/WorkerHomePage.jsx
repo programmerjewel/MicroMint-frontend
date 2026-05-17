@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 const WorkerHomePage = () => {
   const {user} = useAuth();
   const axiosSecure= useAxiosSecure();
-  const {data: stats = [], isLoading} = useQuery({
+  const {data: stats = {}, isLoading} = useQuery({
     queryKey: ["worker-stats", user?.email],
     queryFn: async ()=> {
       const {data} = await axiosSecure.get(`/worker-stats/${user?.email}`);
