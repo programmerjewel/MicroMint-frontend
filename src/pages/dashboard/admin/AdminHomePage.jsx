@@ -6,6 +6,7 @@ import AdminStats from '@/components/features/dashboard/admin/AdminStats';
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loading from "@/components/shared/Loading";
+import { Badge } from "@/components/ui/badge";
 
 const AdminHome = () => {
   const axiosSecure = useAxiosSecure();
@@ -53,10 +54,10 @@ const AdminHome = () => {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between px-2">
-          <h2 className="text-xl font-bold text-slate-800">Pending Withdrawals</h2>
-          <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold">
+          <h2 className="text-xl font-bold">Pending Withdrawals</h2>
+          <Badge variant="amber">
             {withdrawRequests.length} Requests
-          </span>
+          </Badge>
         </div>
 
         <WithdrawRequestTable

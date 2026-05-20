@@ -11,9 +11,9 @@ import WithdrawRequestTableRow from "./WithdrawRequestTableRow";
 
 const WithdrawRequestTable = ({ requests = [], onApprove, onReject }) => {
   return (
-    <div className="rounded-md border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-md border shadow-sm overflow-hidden">
       <Table>
-        <TableHeader className="bg-slate-50">
+        <TableHeader>
           <TableRow>
             <TableHead>Worker Details</TableHead>
             <TableHead>Withdraw Coins</TableHead>

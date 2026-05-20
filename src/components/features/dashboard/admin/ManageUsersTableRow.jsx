@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 import ConfirmActionModal from "@/components/shared/ConfirmActionModal";
 
 const roleStyles = {
-  admin: "bg-rose-50 text-rose-600 border-rose-200",
-  buyer: "bg-violet-50 text-violet-600 border-violet-200",
-  worker: "bg-sky-50 text-sky-600 border-sky-200",
+  admin: "bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50",
+  buyer: "bg-violet-50 text-violet-600 border-violet-200 dark:bg-violet-950/30 dark:text-violet-400 dark:border-violet-900/50",
+  worker: "bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-950/30 dark:text-sky-400 dark:border-sky-900/50",
 };
 
 const ManageUsersTableRow = ({ user, roleRequest, onStatusUpdate, onRemove }) => {
@@ -23,23 +23,23 @@ const ManageUsersTableRow = ({ user, roleRequest, onStatusUpdate, onRemove }) =>
       
       <TableCell className="py-3 px-4">
         <div className="flex items-center gap-3">
-          <Avatar className="h-9 w-9 ring-2 ring-slate-100">
+          <Avatar className="h-9 w-9 ring-1 ring-slate-100">
             <AvatarImage src={image} alt={name} referrerPolicy="no-referrer" />
             <AvatarFallback className="bg-slate-800 text-white text-xs">{name?.[0]}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col min-w-0">
-            <span className="font-semibold text-slate-800 truncate">{name}</span>
-            <span className="text-xs text-slate-400 truncate">{email}</span>
+            <span className="font-semibold truncate text-md">{name}</span>
+            <span className="text-xs text-slate-400 dark:text-slate-300 truncate">{email}</span>
           </div>
         </div>
       </TableCell>
 
       
       <TableCell>
-        <div className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-full text-amber-700">
+        <Badge variant="amber" className="gap-1.5">
           <LiaCoinsSolid className="h-3.5 w-3.5" />
-          <span className="text-xs font-bold">{coins ?? 0}</span>
-        </div>
+          {coins ?? 0}
+        </Badge>
       </TableCell>
 
       

@@ -3,9 +3,9 @@ import ManageUsersTableRow from "./ManageUsersTableRow";
 
 const ManageUsersTable = ({ users = [], roleRequests = [], onStatusUpdate, onRemove }) => {
   return (
-    <div className="rounded-md border bg-white  overflow-hidden">
+    <div className="rounded-md border overflow-hidden">
       <Table>
-        <TableHeader className="bg-slate-50">
+        <TableHeader>
           <TableRow>
             <TableHead className="w-[30%]">User</TableHead>
             <TableHead className="w-[10%]">Coins</TableHead>

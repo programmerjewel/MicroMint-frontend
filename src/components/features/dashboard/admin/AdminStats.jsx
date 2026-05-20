@@ -20,35 +20,35 @@ const AdminStats = () => {
 
   // Define the card structure for both loading and data states
   const adminCards = [
-    {
-      title: "Total Workers",
-      value: stats.totalWorkers,
-      icon: Users,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100",
-    },
-    {
-      title: "Total Buyers",
-      value: stats.totalBuyers,
-      icon: Briefcase,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100",
-    },
-    {
-      title: "Platform Coins",
-      value: stats.totalCoins?.toLocaleString(),
-      icon: Database,
-      color: "text-amber-600",
-      bgColor: "bg-amber-100",
-    },
-    {
-      title: "Total Payments",
-      value: stats.totalPaymentsUSD !== undefined ? `$${stats.totalPaymentsUSD.toFixed(2)}` : null,
-      icon: Wallet,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-100",
-    },
-  ];
+  {
+    title: "Total Workers",
+    value: stats.totalWorkers,
+    icon: Users,
+    color: "text-blue-600 dark:text-blue-400",
+    bgColor: "bg-blue-100 dark:bg-blue-950/30",
+  },
+  {
+    title: "Total Buyers",
+    value: stats.totalBuyers,
+    icon: Briefcase,
+    color: "text-purple-600 dark:text-purple-400",
+    bgColor: "bg-purple-100 dark:bg-purple-950/30",
+  },
+  {
+    title: "Platform Coins",
+    value: stats.totalCoins?.toLocaleString(),
+    icon: Database,
+    color: "text-amber-600 dark:text-amber-400",
+    bgColor: "bg-amber-100 dark:bg-amber-950/30",
+  },
+  {
+    title: "Total Payments",
+    value: stats.totalPaymentsUSD !== undefined ? `$${stats.totalPaymentsUSD.toFixed(2)}` : null,
+    icon: Wallet,
+    color: "text-emerald-600 dark:text-emerald-400",
+    bgColor: "bg-emerald-100 dark:bg-emerald-950/30",
+  },
+];
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

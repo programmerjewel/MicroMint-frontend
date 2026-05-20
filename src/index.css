@@ -106,7 +106,7 @@
 
 .dark {
   /* Brand Colors for Dark Mode */
-  --brand-primary: hsl(237 100% 70%);      /* Lightened Indigo for visibility */
+  --brand-primary: hsl(237, 95%, 61%);      /* Lightened Indigo for visibility */
   
   /* Text Readability for Dark Mode */
   --brand-text: hsl(237 100% 95%);         /* Off-white Lavender */

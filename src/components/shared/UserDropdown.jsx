@@ -11,10 +11,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useCoin from "@/hooks/useCoin";
+import useRole from "@/hooks/useRole";
+import { LiaCoinsSolid } from "react-icons/lia";
 
 const UserDropdown = ({ align = "end", variant = "public" }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, logoutUser } = useAuth();
+  const { coins } = useCoin();
+  const { role } = useRole();
 
   if (!user) return null;
 
@@ -30,10 +35,10 @@ const UserDropdown = ({ align = "end", variant = "public" }) => {
               src={user?.photoURL}
               alt="Avatar"
               referrerPolicy="no-referrer"
-              className="h-8 w-8 rounded-full object-cover border border-border shadow-sm"
+              className="h-6 w-6 md:h-8 md:w-8 rounded-full object-cover border border-border shadow-sm"
             />
           ) : (
-            <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shrink-0 border border-border shadow-sm">
+            <div className="h-6 w-6 md:h-8 md:w-8 rounded-full bg-primary flex items-center justify-center shrink-0 border border-border shadow-sm">
               <span className="text-[10px] font-bold text-primary-foreground">
                 {initials}
               </span>
@@ -57,6 +62,14 @@ const UserDropdown = ({ align = "end", variant = "public" }) => {
             <p className="text-xs leading-none text-muted-foreground truncate">
               {user?.email}
             </p>
+            <div className="md:hidden mt-2 pt-2 border-t border-border flex gap-4 text-xs">
+              <div className="flex items-center gap-1 font-medium text-foreground">
+                <span>Coins: {coins}</span>
+              </div>
+              <div className="text-muted-foreground font-medium capitalize">
+                Role: <span className="text-foreground">{role}</span>
+              </div>
+            </div>
           </div>
         </DropdownMenuLabel>
 
