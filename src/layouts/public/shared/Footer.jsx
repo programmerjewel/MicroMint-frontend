@@ -1,26 +1,27 @@
-
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import Logo from "@/components/shared/Logo";
 
+// Social Links Data
 const socialLinks = [
   { name: "Facebook", icon: FaFacebook, href: "https://facebook.com" },
-  { name: "Twitter", icon: FaTwitter, href: "https://twitter.com" },
+  { name: "Twitter/X", icon: FaXTwitter, href: "https://x.com" },
   { name: "Instagram", icon: FaInstagram, href: "https://instagram.com" },
   { name: "LinkedIn", icon: FaLinkedinIn, href: "https://linkedin.com" },
   { name: "GitHub", icon: FaGithub, href: "https://github.com" },
 ];
 
-const  Footer= () => {
+
+const Footer = () => {
   return (
     <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <Link to='/' className="flex items-center space-x-2">
-            <div className="h-6 w-6 rounded bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">L</span>
-            </div>
-            <span className="font-semibold">Logo</span>
+          {/* Logo Brand Link */}
+          <Link to="/" className="flex items-center space-x-2" aria-label="MicroMint Home">
+            <Logo className="h-6 w-auto" />
           </Link>
 
           {/* Social Links */}

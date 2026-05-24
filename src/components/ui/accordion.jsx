@@ -44,17 +44,25 @@ function AccordionTrigger({
   );
 }
 
-function AccordionContent({
+function AccordionContent({ 
   className,
-  children,
-  ...props
+  children, 
+  ...props 
 }) {
   return (
     <AccordionPrimitive.Content
       data-slot="accordion-content"
+      // Keep the animation classes on the Radix wrapper
       className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
-      {...props}>
-      <div className={cn("pt-0 pb-4", className)}>{children}</div>
+      {...props}
+    >
+      {/* 
+        We use `cn` to cleanly merge "pt-0 pb-4" with whatever custom styles 
+        (like font-light or colors) you pass down from your FAQ page.
+      */}
+      <div className={cn("pt-0 pb-4", className)}>
+        {children}
+      </div>
     </AccordionPrimitive.Content>
   );
 }

@@ -21,7 +21,7 @@ const WorkerWithdrawalPage = () => {
         <TotalEarnings coins={coins} />
       </div>
 
-      <Card className="mt-8 border-slate-200 shadow-sm">
+      <Card className="mt-8">
         <CardTitle className="p-6 pb-0">
           <h3 className="text-lg font-bold">Withdrawal Form</h3>
         </CardTitle>

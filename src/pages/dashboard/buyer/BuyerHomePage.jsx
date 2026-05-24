@@ -6,6 +6,7 @@ import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loading from "@/components/shared/Loading";
+import { Badge } from "@/components/ui/badge";
 
 const BuyerHomePage = () => {
   const { user } = useAuth();
@@ -58,9 +59,9 @@ const BuyerHomePage = () => {
       <div>
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold my-4">Submissions to Review</h2>
-          <span className="text-sm text-muted-foreground">
+          <Badge variant="amber">
             {submissions.length} pending reviews
-          </span>
+          </Badge>
         </div>
         <PendingSubmissionTable
           submissions={submissions}

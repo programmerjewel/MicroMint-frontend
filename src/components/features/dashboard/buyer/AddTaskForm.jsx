@@ -98,7 +98,7 @@ const AddTaskForm = () => {
                 placeholder="ex: watch my YouTube video and make a comment"
               />
               {errors.task_title && (
-                <span className="text-red-500 text-sm">
+                <span className="text-red-500 dark:text-red-400 text-sm">
                   {errors.task_title.message}
                 </span>
               )}
@@ -116,7 +116,7 @@ const AddTaskForm = () => {
                 className="min-h-25"
               />
               {errors.task_detail && (
-                <span className="text-red-500 text-sm">
+                <span className="text-red-500 dark:text-red-400 text-sm">
                   {errors.task_detail.message}
                 </span>
               )}
@@ -175,7 +175,7 @@ const AddTaskForm = () => {
                   accept="image/*"
                 />
                 {errors.task_image && (
-                  <span className="text-red-500 text-sm">
+                  <span className="text-red-500 dark:text-red-400 text-sm">
                     {errors.task_image.message}
                   </span>
                 )}
@@ -185,7 +185,7 @@ const AddTaskForm = () => {
             {/* Submission Info */}
             <div className="space-y-2">
               <Label htmlFor="submission_info">Submission Info</Label>
-              <Input
+              <Textarea
                 {...register("submission_info", {
                   required: "Proof requirements are required",
                 })}
@@ -194,7 +194,7 @@ const AddTaskForm = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button variant="default" type="submit" className="w-full" disabled={loading}>
               {loading ? "Processing Task..." : "Add Task"}
             </Button>
           </form>
@@ -205,21 +205,21 @@ const AddTaskForm = () => {
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent className="sm:max-w-106.25">
           <DialogHeader>
-            <DialogTitle className="text-red-500">
+            <DialogTitle className="text-red-500 dark:text-red-400">
               Insufficient Balance
             </DialogTitle>
             <DialogDescription className="py-4">
               You need{" "}
-              <span className="font-bold text-gray-900">{requiredAmount}</span>{" "}
+              <span className="font-bold text-slate-900 dark:text-slate-100">{requiredAmount}</span>{" "}
               coins to post this task, but you currently have only{" "}
-              <span className="font-bold text-gray-900">{coins}</span> coins.
+              <span className="font-bold text-slate-900 dark:text-slate-100">{coins}</span> coins.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex gap-2">
             <Button variant="outline" onClick={() => setShowModal(false)}>
               Adjust Task
             </Button>
-            <Button onClick={() => navigate("/dashboard/purchase-coins")}>
+            <Button className="dark:text-white/95" onClick={() => navigate("/dashboard/purchase-coins")}>
               Purchase Coins
             </Button>
           </DialogFooter>

@@ -11,9 +11,9 @@ import AddedTasksTableRow from "./AddedTasksTableRow";
 
 const AddedTasksTable = ({ tasks, onUpdate, onDelete }) => {
   return (
-    <div className="rounded-md border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-md border overflow-hidden">
       <Table>
-        <TableHeader className="bg-slate-50">
+        <TableHeader>
           <TableRow>
             <TableHead className='w-[40%]'>Task Info</TableHead>
             <TableHead className='w-[20%]'>Deadline</TableHead>

@@ -21,6 +21,7 @@ const ApprovedSubmissions = () => {
   const approvedSubmissions = submissions.filter(
     (sub) => sub.status === "approved"
   );
+  
   return (
     <section>
       <h2 className="font-semibold text-xl mt-6">Approved Submissions</h2>

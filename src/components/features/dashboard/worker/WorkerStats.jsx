@@ -1,4 +1,4 @@
-import { Send, Clock, DollarSign } from "lucide-react";
+import { Send, Clock } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BiDollar } from "react-icons/bi";
 
 //Skeleton Loader - Matches the exact layout of the real cards
 export const WorkerStatsSkeleton = () => {
@@ -35,32 +36,32 @@ const WorkerStats = ({ stats = {} }) => {
   } = stats;
 
   //UI stats card
-  const statsCards = [
-    {
-      title: "Total Submissions",
-      value: totalSubmissions,
-      description: "All tasks you have submitted",
-      icon: Send,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100",
-    },
-    {
-      title: "Pending Submissions",
-      value: totalPendingSubmissions,
-      description: "Awaiting buyer review",
-      icon: Clock,
-      color: "text-orange-600",
-      bgColor: "bg-orange-100",
-    },
-    {
-      title: "Total Earnings",
-      value: `$${totalEarningsDollar.toFixed(2)}`,
-      description: "From approved tasks",
-      icon: DollarSign,
-      color: "text-green-600",
-      bgColor: "bg-green-100",
-    },
-  ];
+ const statsCards = [
+  {
+    title: "Total Submissions",
+    value: totalSubmissions,
+    description: "All tasks you have submitted",
+    icon: Send,
+    color: "text-blue-600 dark:text-blue-400",
+    bgColor: "bg-blue-100 dark:bg-blue-950/40 border border-transparent dark:border-blue-900/30",
+  },
+  {
+    title: "Pending Submissions",
+    value: totalPendingSubmissions,
+    description: "Awaiting buyer review",
+    icon: Clock,
+    color: "text-orange-600 dark:text-orange-400",
+    bgColor: "bg-orange-100 dark:bg-orange-950/40 border border-transparent dark:border-orange-900/30",
+  },
+  {
+    title: "Total Earnings",
+    value: `$${totalEarningsDollar.toFixed(2)}`,
+    description: "From approved tasks",
+    icon: BiDollar,
+    color: "text-green-600 dark:text-green-400",
+    bgColor: "bg-green-100 dark:bg-green-950/40 border border-transparent dark:border-green-900/30",
+  },
+];
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

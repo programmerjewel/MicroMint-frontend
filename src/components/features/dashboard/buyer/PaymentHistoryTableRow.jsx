@@ -1,7 +1,8 @@
 
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, CheckCircle2} from "lucide-react";
+import { CheckCircle2} from "lucide-react";
+import { CiCalendar } from "react-icons/ci";
 
 const PaymentHistoryTableRow = ({ payment }) => {
   return (
@@ -19,20 +20,21 @@ const PaymentHistoryTableRow = ({ payment }) => {
         <span className="text-sm line-clamp-1 w-full truncate block font-medium">{payment.task_title}</span>
       </TableCell>
 
-      <TableCell className="font-bold text-emerald-600">
-        {payment.payable_amount} Coins
+      <TableCell>
+        <Badge variant="amber" className="gap-1.5 rounded-md">
+          {payment.payable_amount} coins
+        </Badge>
       </TableCell>
 
-      <TableCell className="text-muted-foreground">
-        <div className="flex items-center gap-2 text-xs">
-          <Calendar className="h-3 w-3" />
-          {/* Using reviewedAt because this is when the payout was finalized */}
+      <TableCell>
+        <Badge variant="secondary" className="gap-1.5 rounded-md">
+          <CiCalendar className="h-3.5 w-3.5" />
           {new Date(payment.reviewedAt).toLocaleDateString()}
-        </div>
+        </Badge>
       </TableCell>
 
       <TableCell className="text-right">
-        <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 capitalize">
+        <Badge variant="approved">
           <CheckCircle2 className="h-3 w-3 mr-1" />
           {payment.status}
         </Badge>

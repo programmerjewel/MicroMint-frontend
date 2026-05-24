@@ -10,34 +10,34 @@ import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 
 const statsCards = [
-    {
-      key: "totalTasks",
-      title: "Total Tasks",
-      description: "Jobs posted by you",
-      icon: LayoutList,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100",
-      format: (v) => v,
-    },
-    {
-      key: "totalPendingWorkers",
-      title: "Pending Openings",
-      description: "Remaining worker slots",
-      icon: Users,
-      color: "text-amber-600",
-      bgColor: "bg-amber-100",
-      format: (v) => v,
-    },
-    {
-      key: "totalPaymentsPaidDollar",
-      title: "Total Pay",
-      description: "Total amount paid out",
-      icon: CreditCard,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-100",
-      format: (v) => `$${v.toFixed(2)}`,
-    },
-  ];
+  {
+    key: "totalTasks",
+    title: "Total Tasks",
+    description: "Jobs posted by you",
+    icon: LayoutList,
+    color: "text-purple-600 dark:text-purple-400",
+    bgColor: "bg-purple-100 dark:bg-purple-500/10",
+    format: (v) => v,
+  },
+  {
+    key: "totalPendingWorkers",
+    title: "Pending Openings",
+    description: "Remaining worker slots",
+    icon: Users,
+    color: "text-amber-600 dark:text-amber-400",
+    bgColor: "bg-amber-100 dark:bg-amber-500/10",
+    format: (v) => v,
+  },
+  {
+    key: "totalPaymentsPaidDollar",
+    title: "Total Pay",
+    description: "Total amount paid out",
+    icon: CreditCard,
+    color: "text-emerald-600 dark:text-emerald-400",
+    bgColor: "bg-emerald-100 dark:bg-emerald-500/10",
+    format: (v) => `$${v.toFixed(2)}`,
+  },
+];
 const BuyerStats = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();

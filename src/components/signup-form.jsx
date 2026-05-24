@@ -90,7 +90,6 @@ export function SignupForm({ ...props }) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          
           <div className="flex flex-col items-center gap-3 py-2">
             <div className="relative h-20 w-20 group">
               <div className="h-full w-full rounded-md border-2 border-dashed border-muted-foreground/30 flex items-center justify-center overflow-hidden bg-muted">
@@ -213,13 +212,14 @@ export function SignupForm({ ...props }) {
             )}
           </FieldGroup>
 
-          <Field>
+          <FieldGroup>
+            <Field>
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Processing..." : "Create Account"}
             </Button>
           </Field>
 
-          <FieldSeparator className="my-4">Or continue with</FieldSeparator>
+          <FieldSeparator>Or continue with</FieldSeparator>
           
           <Button variant="outline" type="button" onClick={onGoogleLogin} className="w-full">
             <FcGoogle />
@@ -232,6 +232,7 @@ export function SignupForm({ ...props }) {
               Log In
             </Link>
           </FieldDescription>
+          </FieldGroup>
         </form>
       </CardContent>
     </Card>

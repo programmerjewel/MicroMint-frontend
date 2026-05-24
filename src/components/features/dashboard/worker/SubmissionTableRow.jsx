@@ -1,9 +1,15 @@
-
 import { Link } from "react-router-dom";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, CheckCircle2, Clock, AlertCircle, Ban, Trash2 } from "lucide-react";
+import {
+  RotateCcw,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  Ban,
+  Trash2,
+} from "lucide-react";
 import SubmissionDetailsModal from "./SubmissionDetailsModal";
 import { LiaCoinsSolid } from "react-icons/lia";
 import ConfirmActionModal from "@/components/shared/ConfirmActionModal";
@@ -12,35 +18,66 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
   const { _id, task_id, task_title, buyer, payable_amount, status } =
     submission;
 
-  const statusStyles = {
-    pending: "bg-amber-50 text-amber-700 border-amber-200",
-    approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    rejected: "bg-rose-50 text-rose-700 border-rose-200",
-    "cancelled by buyer": "bg-slate-100 text-slate-600 border-slate-300 italic",
+  const statusConfig = {
+    approved: {
+      variant: "approved",
+      icon: <CheckCircle2 className="w-3 h-3" />,
+      label: "Approved",
+    },
+    pending: { 
+      variant: "pending", 
+      icon: <Clock className="w-3 h-3" />, 
+      label: "Pending",
+    },
+    rejected: {
+      variant: "rejected",
+      icon: <AlertCircle className="w-3 h-3" />,
+      label: "Rejected",
+    },
+    "cancelled account deleted": {
+      variant: "cancelledAdmin",
+      icon: <AlertCircle className="w-3 h-3" />,
+      label: "Admin Cancelled",
+    },
+    "cancelled by buyer": {
+      variant: "cancelledBuyer",
+      icon: <Trash2 className="w-3 h-3" />,
+      label: "Buyer Cancelled",
+    },
+    "cancelled by user": {
+      variant: "cancelledUser",
+      icon: <Trash2 className="w-3 h-3" />,
+      label: "Cancelled by You",
+    },
   };
 
-  const currentStyle = statusStyles[status] || "bg-gray-50 text-gray-600";
+  const normalizedStatus = status?.toLowerCase();
+  
+  const currentConfig = statusConfig[normalizedStatus] || {
+    variant: "outline",
+    icon: null,
+    label: status, // Fallback if a brand new status pops up
+  };
 
   return (
-    <TableRow className="hover:bg-gray-50/50 transition-colors">
-      <TableCell className="font-medium text-gray-900">{task_title}</TableCell>
-      <TableCell className="text-gray-600">{buyer.name}</TableCell>
+    <TableRow>
+      <TableCell className="font-medium">{task_title}</TableCell>
+      <TableCell className="text-gray-600 dark:text-gray-400">
+        {buyer.name}
+      </TableCell>
       <TableCell>
-        <div className="flex items-center justify-center gap-2">
-          <LiaCoinsSolid className="h-5 w-5 text-amber-600" />
-          <span className="font-semibold text-gray-600">{payable_amount}</span>
-        </div>
+        <Badge variant="amber" className="gap-1.5">
+          <LiaCoinsSolid className="h-3.5 w-3.5" />
+          {payable_amount}
+        </Badge>
       </TableCell>
       <TableCell>
         <Badge
-          variant="outline"
-          className={`capitalize px-2 py-0.5 rounded-full font-medium flex items-center w-fit gap-1 ${currentStyle}`}
+          variant={currentConfig.variant}
+          className="px-2 py-0.5 rounded-full flex items-center w-fit gap-1"
         >
-          {status === "pending" && <Clock className="w-3 h-3" />}
-          {status === "approved" && <CheckCircle2 className="w-3 h-3" />}
-          {status === "rejected" && <AlertCircle className="w-3 h-3" />}
-          {status === "cancelled by buyer" && <Trash2 className="w-3 h-3" />}
-          {status}
+          {currentConfig.icon}
+          {currentConfig.label}
         </Badge>
       </TableCell>
 
@@ -51,7 +88,7 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
             description="This will remove your submission. If the task has limited spots, someone else might take your place."
             confirmText="Confirm Cancel"
             variant="destructive"
-            onConfirm={() => onCancel(_id)} // Pass the submission ID here
+            onConfirm={() => onCancel(_id)}
             trigger={
               <Button
                 variant="outline"
@@ -64,8 +101,8 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
           />
         ) : status === "approved" ? (
           <SubmissionDetailsModal submission={submission} />
-        ) : (
-          status === "rejected" ? (<Link to={`/dashboard/tasks/${task_id}`}>
+        ) : status === "rejected" ? (
+          <Link to={`/dashboard/tasks/${task_id}`}>
             <Button
               variant="outline"
               size="xs"
@@ -74,9 +111,8 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
               <RotateCcw className="w-3.5 h-3.5 mr-1" /> Resubmit
             </Button>
           </Link>
-          ) : (
-            /* status === "cancelled by buyer" */
-            <Button
+        ) : (
+          <Button
             variant="ghost"
             size="sm"
             disabled
@@ -84,7 +120,6 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
           >
             No Actions Available
           </Button>
-          )
         )}
       </TableCell>
     </TableRow>

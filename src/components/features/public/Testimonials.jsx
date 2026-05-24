@@ -1,6 +1,7 @@
 import SectionHeader from "@/components/ui/section-header";
 import Marquee from "react-fast-marquee";
 import { BiSolidQuoteLeft } from "react-icons/bi";
+
 const Testimonials = () => {
   const testimonials = [
     {
@@ -59,7 +60,7 @@ const Testimonials = () => {
           <svg
             key={index}
             className={`w-5 h-5 ${
-              index < rating ? "text-yellow-400" : "text-gray-300"
+              index < rating ? "text-yellow-400" : "text-slate-300 dark:text-slate-700"
             }`}
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -74,14 +75,14 @@ const Testimonials = () => {
   // Testimonial Card component
   const TestimonialCard = ({ testimonial }) => {
     return (
-      <div className="w-87.5 md:w-100 mx-4 bg-white rounded-2xl p-6 border border-gray-200">
+      <div className="w-87.5 md:w-100 mx-4 bg-white dark:bg-gray-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 transition-colors duration-300">
         {/* Quote Icon */}
         <div className="mb-4">
-          <BiSolidQuoteLeft size={45} className="text-green-400"/>
+          <BiSolidQuoteLeft size={45} className="text-emerald-400 dark:text-emerald-400/60" />
         </div>
 
         {/* Quote Text */}
-        <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-4">
+        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 line-clamp-4">
           "{testimonial.quote}"
         </p>
 
@@ -95,11 +96,11 @@ const Testimonials = () => {
           <img
             src={testimonial.photo}
             alt={testimonial.name}
-            className="w-12 h-12 rounded-full object-cover border-2 border-indigo-100"
+            className="w-12 h-12 rounded-full object-cover border-2 border-indigo-100 dark:border-indigo-950"
           />
           <div>
-            <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
-            <p className="text-sm text-gray-500">{testimonial.role}</p>
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">{testimonial.name}</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{testimonial.role}</p>
           </div>
         </div>
       </div>
@@ -107,24 +108,32 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-16 overflow-hidden">
+    <section className="py-16 overflow-hidden bg-background">
       <div className="max-w-7xl mx-auto px-4 mb-12">
         {/* Section Header */}
-        <SectionHeader title="What Our Users Say" subtitle="Join thousands of satisfied workers and businesses who trust
-            SwiftBounty for their micro-task needs."/>
+        <SectionHeader 
+          title="What Our Users Say" 
+          subtitle="Join thousands of satisfied workers and businesses who trust SwiftBounty for their micro-task needs."
+        />
       </div>
 
-      {/* Marquee */}
-      <Marquee
-        speed={60}
-        gradient={true}
-        gradientColor="#f9fafb"
-        gradientWidth={100}
-      >
-        {testimonials.map((testimonial) => (
-          <TestimonialCard key={testimonial.id} testimonial={testimonial} />
-        ))}
-      </Marquee>
+      {/* Marquee Container with explicit relative wrapper for modern fading masks */}
+      <div className="relative w-full">
+        {/* Left Side Shadow Mask fade overlay */}
+        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 z-10 pointer-events-none bg-linear-to-r from-background to-transparent" />
+        
+        {/* Right Side Shadow Mask fade overlay */}
+        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 z-10 pointer-events-none bg-linear-to-l from-background to-transparent" />
+
+        <Marquee
+          speed={60}
+          gradient={false} // Disabled react-fast-marquee's native color gradient tool to prevent light bleed flashes
+        >
+          {testimonials.map((testimonial) => (
+            <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+          ))}
+        </Marquee>
+      </div>
     </section>
   );
 };

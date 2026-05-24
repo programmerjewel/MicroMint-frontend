@@ -7,31 +7,52 @@ import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { toast } from "sonner";
 
 const IconMap = {
-  zap: <Zap className="text-blue-500" />,
-  sparkles: <Sparkles className="text-amber-500" />,
-  shield: <ShieldCheck className="text-emerald-500" />,
+  zap: <Zap className="text-blue-500 dark:text-blue-400" />,
+  sparkles: <Sparkles className="text-amber-500 dark:text-amber-400" />,
+  shield: <ShieldCheck className="text-emerald-500 dark:text-emerald-400" />,
 };
 
 const BadgeStyles = {
-  "Entry": "bg-blue-100 text-blue-700 border-blue-200",
-  "Popular": "bg-amber-100 text-amber-700 border-amber-200 shadow-sm",
-  "Best Value": "bg-emerald-100 text-emerald-700 border-emerald-200 animate-pulse",
+  "Entry": 
+    "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-900",
+  
+  "Popular": 
+    "bg-amber-100 text-amber-700 border-amber-200 shadow-sm dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900",
+  
+  "Best Value": 
+    "bg-emerald-100 text-emerald-700 border-emerald-200 animate-pulse dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-900",
 };
 
-// Refactored Quota Display - No hardcoded numbers
+// Refactored Quota Display - With Dark Theme Support
 const QuotaTracker = ({ label, current, max, colorClass }) => {
   const percentage = Math.min((current / max) * 100, 100);
+  
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
-        <span className="text-slate-500">{label}</span>
-        <span className={current >= max ? "text-red-600" : "text-slate-900"}>
+        {/* Changed text-slate-500 to dark:text-slate-400 */}
+        <span className="text-slate-500 dark:text-slate-400">
+          {label}
+        </span>
+        
+        {/* Adjusted the text colors for maximum contrast in both themes */}
+        <span className={
+          current >= max 
+            ? "text-red-600 dark:text-red-400" 
+            : "text-slate-900 dark:text-slate-100"
+        }>
           {current.toLocaleString()} / {max.toLocaleString()}
         </span>
       </div>
-      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-50">
+      
+      {/* Container Track: Adjusted background and border for dark theme */}
+      <div className="h-2 w-full bg-slate-100 border border-slate-50 rounded-full overflow-hidden dark:bg-slate-800 dark:border-slate-800/50">
         <div 
-          className={`h-full transition-all duration-1000 ${current >= max ? 'bg-red-500' : colorClass}`} 
+          className={`h-full transition-all duration-1000 ${
+            current >= max 
+              ? 'bg-red-500 dark:bg-red-400' 
+              : colorClass
+          }`} 
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -63,7 +84,7 @@ const PurchaseCoin = ({ stats, packages }) => {
     <div className="max-w-6xl mx-auto py-6 px-4 space-y-10">
       {/* Dynamic Warning Alert */}
       {dailyLimitReached && (
-        <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-center gap-3 text-red-700 animate-in fade-in slide-in-from-top-2">
+        <div className="bg-red-50 border border-red-200 p-4 rounded-xl flex items-center gap-3 text-red-700 animate-in fade-in slide-in-from-top-2 dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-400">
           <ShieldAlert className="h-5 w-5 shrink-0" />
           <p className="text-sm font-semibold">
             Daily limit reached. Resets in {stats.resetIn.hours}h {stats.resetIn.minutes}m.
@@ -79,30 +100,48 @@ const PurchaseCoin = ({ stats, packages }) => {
           const isButtonDisabled = wouldExceedDaily || wouldExceedMonthly || processingId !== null;
 
           return (
-            <Card key={pkg._id} className={`relative overflow-hidden transition-all duration-50 border-2 ${pkg.badge === "Popular" ? "border-amber-200 shadow-sm" : "border-transparent"} ${isButtonDisabled ? "opacity-60" : "hover:shadow-md"}`}>
+            <Card 
+              key={pkg._id} 
+              className={`relative overflow-hidden transition-all duration-50 border-2 ${
+                pkg.badge === "Popular" 
+                  ? "border-amber-200 shadow-sm dark:border-amber-500/30" 
+                  : "border-transparent"
+              } ${isButtonDisabled ? "opacity-60" : "hover:shadow-md"} dark:bg-slate-900/40`}
+            >
               {pkg.badge && (
                 <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase border ${BadgeStyles[pkg.badge]}`}>
                   {pkg.badge}
                 </div>
               )}
+              
               <CardHeader className="text-center pt-10">
-                <div className="mx-auto bg-slate-50 w-14 h-14 rounded-2xl flex items-center justify-center mb-4 border border-slate-100 shadow-inner">
-                  {IconMap[pkg.icon_type] || <Coins className="text-slate-400" />}
+                {/* Icon Wrapper */}
+                <div className="mx-auto bg-slate-50 w-14 h-14 rounded-2xl flex items-center justify-center mb-4 border border-slate-100 shadow-inner dark:bg-slate-800 dark:border-slate-700/50">
+                  {IconMap[pkg.icon_type] || <Coins className="text-slate-400 dark:text-slate-500" />}
                 </div>
-                <CardTitle className="text-5xl font-bold text-slate-900 leading-none">
-                  <span className="text-2xl font-bold align-top mt-1 inline-block text-slate-400">$</span>
+                
+                {/* Price Display */}
+                <CardTitle className="text-5xl font-bold text-slate-900 leading-none dark:text-slate-50">
+                  <span className="text-2xl font-bold align-top mt-1 inline-block text-slate-400 dark:text-slate-500">$</span>
                   {pkg.price_usd}
                 </CardTitle>
-                <p className="text-sm text-slate-500 font-semibold mt-2">
-                  {pkg.coins.toLocaleString()} <span className="text-slate-400 font-normal">Coins</span>
+                
+                <p className="text-sm text-slate-500 font-semibold mt-2 dark:text-slate-400">
+                  {pkg.coins.toLocaleString()} <span className="text-slate-400 font-normal dark:text-slate-500">Coins</span>
                 </p>
               </CardHeader>
-              <CardContent className="text-center px-6 min-h-15 text-xs text-slate-500 leading-relaxed">
+
+              <CardContent className="text-center px-6 min-h-15 text-xs text-slate-500 leading-relaxed dark:text-slate-400">
                 {pkg.description}
               </CardContent>
+
               <CardFooter className="pb-8">
                 <Button 
-                  className={`w-full h-12 font-bold rounded-xl ${pkg.badge === "Popular" && !isButtonDisabled ? "bg-amber-500 hover:bg-amber-600 shadow-lg shadow-amber-100" : "bg-slate-900 hover:bg-slate-800"}`}
+                  className={`w-full h-12 font-bold rounded-xl ${
+                    pkg.badge === "Popular" && !isButtonDisabled 
+                      ? "bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-100 dark:shadow-none dark:bg-amber-600 dark:hover:bg-amber-500" 
+                      : "bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+                  }`}
                   disabled={isButtonDisabled}
                   onClick={() => {
                     setProcessingId(pkg._id);
@@ -119,23 +158,26 @@ const PurchaseCoin = ({ stats, packages }) => {
       </div>
 
       {/* Footer Info Section */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
+      <div className="border border-slate-200 rounded-3xl p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900/20">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
           <div className="space-y-1">
-            <h3 className="font-bold text-slate-900 flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-500" /> Secure Quota Management
+            <h3 className="font-bold text-slate-900 flex items-center gap-2 dark:text-slate-50">
+              <ShieldCheck className="h-5 w-5 text-emerald-500 dark:text-emerald-400" /> Secure Quota Management
             </h3>
-            <p className="text-xs text-slate-500">Limits are strictly enforced server-side to maintain system stability.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Limits are strictly enforced server-side to maintain system stability.</p>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full text-xs font-bold text-slate-600">
-            <Clock className="h-4 w-4 text-amber-500" />
+          
+          {/* Next Reset Pill */}
+          <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full text-xs font-bold text-slate-600 dark:bg-slate-800 dark:border-slate-700/50 dark:text-slate-300">
+            <Clock className="h-4 w-4 text-amber-500 dark:text-amber-400" />
             Next Reset: {stats.resetIn.hours}h {stats.resetIn.minutes}m
           </div>
         </div>
 
+        {/* Quota Progress Trackers */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <QuotaTracker label="Daily Quota" current={stats.usage.daily} max={stats.limits.daily} colorClass="bg-amber-500" />
-          <QuotaTracker label="Monthly Quota" current={stats.usage.monthly} max={stats.limits.monthly} colorClass="bg-slate-900" />
+          <QuotaTracker label="Daily Quota" current={stats.usage.daily} max={stats.limits.daily} colorClass="bg-amber-500 dark:bg-amber-400" />
+          <QuotaTracker label="Monthly Quota" current={stats.usage.monthly} max={stats.limits.monthly} colorClass="bg-slate-900 dark:bg-slate-100" />
         </div>
       </div>
     </div>

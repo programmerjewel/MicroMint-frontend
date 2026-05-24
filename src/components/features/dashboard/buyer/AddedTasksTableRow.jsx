@@ -16,6 +16,9 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { LiaCoinsSolid } from "react-icons/lia";
 import ConfirmActionModal from "@/components/shared/ConfirmActionModal";
+import { Badge } from "@/components/ui/badge";
+import { CiCalendar } from "react-icons/ci";
+import { GoPeople } from "react-icons/go";
 
 const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
   const [open, setOpen] = useState(false);
@@ -32,7 +35,7 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
   const todayDateStr = new Date().toISOString().split("T")[0];
 
   const onSubmit = async (data) => {
-    if(!isDirty){
+    if (!isDirty) {
       setOpen(false);
       return;
     }
@@ -54,31 +57,40 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
   };
 
   return (
-    <TableRow className="group hover:bg-slate-50/50 transition-colors">
+    <TableRow>
       <TableCell className="py-4">
         <div className="flex flex-col gap-1.5">
-          <span className="font-bold text-slate-900 leading-none">
-            {task.task_title}
-          </span>
-          <p className="text-sm text-slate-500 truncate max-w-80" title={task.task_detail}>
+          <span className="font-bold leading-none">{task.task_title}</span>
+          <p
+            className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-80"
+            title={task.task_detail}
+          >
             {task.task_detail}
           </p>
         </div>
       </TableCell>
 
-      <TableCell className="text-sm font-medium text-slate-600">
-        {task.completion_date}
+      <TableCell>
+        <Badge variant="secondary" className="gap-1.5">
+          <CiCalendar className="h-3.5 w-3.5" />
+          {task.completion_date}
+        </Badge>
       </TableCell>
 
-      <TableCell className="font-semibold text-emerald-600">
-        <div className="flex items-center justify-center gap-2">
-          <LiaCoinsSolid className="h-5 w-5" />
-          <span>{task.payable_amount}</span>
+      <TableCell>
+        <Badge variant="amber" className="gap-1.5">
+          <LiaCoinsSolid className="h-3.5 w-3.5" />
+          {task.payable_amount}
+        </Badge>
+      </TableCell>
+
+      <TableCell>
+        <div className="flex items-center justify-center gap-1.5 px-2 py-1 rounded-full border w-fit mx-auto transition-colors bg-teal-50/60 border-teal-100 text-teal-700 dark:bg-teal-950/20 dark:border-teal-900/40 dark:text-teal-400">
+          <GoPeople className="h-3.5 w-3.5 shrink-0" />
+          <span className="text-xs font-bold leading-none">
+            {task.required_workers}
+          </span>
         </div>
-      </TableCell>
-
-      <TableCell className="text-slate-600 font-medium text-center">
-        {task.required_workers}
       </TableCell>
 
       <TableCell className="text-right">
@@ -88,7 +100,7 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-9 w-9 text-blue-600 border-blue-100 hover:bg-blue-50 hover:text-blue-700 shadow-sm"
+                className="h-9 w-9 text-brand-primary dark:text-blue-300 border-blue-100 dark:border-blue-900/40 hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-700 dark:hover:text-blue-300 shadow-sm"
               >
                 <Edit className="h-4 w-4" />
               </Button>
@@ -104,10 +116,14 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
                   <div className="space-y-2">
                     <Label>Title</Label>
                     <Input
-                      {...register("task_title", { required: "Title is required." })}
+                      {...register("task_title", {
+                        required: "Title is required.",
+                      })}
                     />
                     {errors.task_title && (
-                      <p className="text-xs text-red-500">{errors.task_title.message}</p>
+                      <p className="text-xs text-red-500">
+                        {errors.task_title.message}
+                      </p>
                     )}
                   </div>
 
@@ -115,10 +131,14 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
                   <div className="space-y-2">
                     <Label>Task Detail</Label>
                     <Textarea
-                      {...register("task_detail", { required: "Detail is required." })}
+                      {...register("task_detail", {
+                        required: "Detail is required.",
+                      })}
                     />
                     {errors.task_detail && (
-                      <p className="text-xs text-red-500">{errors.task_detail.message}</p>
+                      <p className="text-xs text-red-500">
+                        {errors.task_detail.message}
+                      </p>
                     )}
                   </div>
 
@@ -135,7 +155,9 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
                         })}
                       />
                       {errors.required_workers && (
-                        <p className="text-xs text-red-500">{errors.required_workers.message}</p>
+                        <p className="text-xs text-red-500">
+                          {errors.required_workers.message}
+                        </p>
                       )}
                     </div>
 
@@ -155,7 +177,9 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
                         })}
                       />
                       {errors.payable_amount && (
-                        <p className="text-xs text-red-500">{errors.payable_amount.message}</p>
+                        <p className="text-xs text-red-500">
+                          {errors.payable_amount.message}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -166,19 +190,31 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
                     <Input
                       type="date"
                       min={todayDateStr}
-                      {...register("completion_date", { required: "Date is required." })}
+                      {...register("completion_date", {
+                        required: "Date is required.",
+                      })}
                     />
                     {errors.completion_date && (
-                      <p className="text-xs text-red-500">{errors.completion_date.message}</p>
+                      <p className="text-xs text-red-500">
+                        {errors.completion_date.message}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setOpen(false)}
+                  >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isSubmitting || !isDirty} className={!isDirty ? "opacity-50 cursor-not-allowed" : ""}>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting || !isDirty}
+                    className={!isDirty ? "opacity-50 cursor-not-allowed" : ""}
+                  >
                     {isSubmitting ? "Saving..." : "Save Changes"}
                   </Button>
                 </DialogFooter>
@@ -196,7 +232,7 @@ const AddedTasksTableRow = ({ task, onUpdate, onDelete }) => {
               <Button
                 variant="outline"
                 size="icon"
-                className="h-9 w-9 text-red-600 border-red-100 hover:bg-red-50 hover:text-red-700 shadow-sm"
+                className="h-9 w-9 text-red-600 dark:text-red-300 border-red-100 hover:bg-red-50 hover:text-red-700 shadow-sm"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>

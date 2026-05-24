@@ -12,7 +12,8 @@
     Settings,
     LogOut,
     HelpCircle,Boxes,
-    ArrowLeft
+    ArrowLeft,
+    User
   } from "lucide-react";
 
   import {
@@ -38,7 +39,7 @@
 
   import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-  import { Link } from "react-router-dom";
+  import { Link, useNavigate } from "react-router-dom";
   import useAuth from "@/hooks/useAuth";
   import useRole from "@/hooks/useRole";
 
@@ -65,14 +66,21 @@
 
   const DashboardSidebar = () => {
     //import user and role from hooks
-    const {user} = useAuth();
+    const {user , logoutUser} = useAuth();
     const {role} = useRole();
+    const navigate = useNavigate();
 
     const menuItems = menuItemsArr[role] || [];
     const { setOpenMobile } = useSidebar();
-    const handleLogout = () => {
-      // Handle logout logic here
-      console.log("Logging out...");
+    const handleLogout = async () => {
+      try{
+        setOpenMobile(false);
+        await logoutUser();
+        navigate("/");
+      }
+      catch(error){
+        console.error("Failed to lgout:", error)
+      }
     };
 
     return (
@@ -155,14 +163,8 @@
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="flex items-center gap-2 cursor-pointer" onClick={() => setOpenMobile(false)}>
-                      <dummyUser className="h-4 w-4" />
+                      <User className="h-4 w-4" />
                       <span>Profile</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
-                      <Settings className="h-4 w-4" />
-                      <span>Settings</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
