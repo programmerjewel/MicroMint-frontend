@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Loader2, ArrowLeft, MailCheck, RotateCcw } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import Logo from "@/components/shared/Logo";
 
 const ForgetPasswordPage = () => {
   const { resetPassword } = useAuth();
@@ -46,7 +47,7 @@ const ForgetPasswordPage = () => {
   return (
     <div className="flex flex-col min-h-svh w-full items-center justify-center p-6 md:p-10 bg-muted/50">
       <div className="flex flex-col justify-center mb-6">
-        <img src="/MicromintLogo.svg" className="w-40" alt="Micromint Logo" />
+        <Logo className="h-8" />
       </div>
 
       <Card className="w-full max-w-md">

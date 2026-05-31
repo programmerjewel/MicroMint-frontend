@@ -162,6 +162,7 @@ const AddTaskForm = () => {
                   })}
                   id="completion_date"
                   type="date"
+                  className="dark:scheme-dark"
                 />
               </div>
 

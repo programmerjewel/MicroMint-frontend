@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import Logo from "@/components/shared/Logo";
 
 const ResetPasswordPage = () => {
   const { confirmNewPassword } = useAuth();
@@ -60,6 +61,9 @@ const ResetPasswordPage = () => {
   if (isSuccess) {
   return (
     <div className="flex flex-col min-h-svh w-full items-center justify-center p-6 bg-muted/50">
+      <div className="flex flex-col justify-center mb-6">
+        <Logo className="h-8" />
+      </div>
       <Card className="w-full max-w-md border-t-4 border-t-emerald-500 shadow-lg">
         <CardContent className="pt-10 pb-8 text-center space-y-6">
           {/* Animated Success Icon */}
@@ -91,21 +95,27 @@ const ResetPasswordPage = () => {
           </div>
         </CardContent>
       </Card>
+      <p className="text-xs text-center text-muted-foreground mt-6">
+        &copy; 2026 Micromint. All rights reserved.
+      </p>
     </div>
   );
 }
 
   return (
     <div className="flex flex-col min-h-svh w-full items-center justify-center p-6 bg-muted/50">
+      <div className="flex flex-col justify-center mb-6">
+        <Logo className="h-8" />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-md uppercase font-bold tracking-tight">Set New Password</CardTitle>
         </CardHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <FieldGroup className="space-y-4">
-              <Field className="space-y-2">
+          <CardContent>
+            <FieldGroup>
+              <Field>
                 <FieldLabel htmlFor="password">New Password</FieldLabel>
                 <div className="relative">
                   <Input
@@ -127,7 +137,7 @@ const ResetPasswordPage = () => {
                 {errors.password && <p className="text-destructive text-xs">{errors.password.message}</p>}
               </Field>
 
-              <Field className="space-y-2">
+              <Field>
                 <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
                 <Input
                   id="confirmPassword"
@@ -144,12 +154,15 @@ const ResetPasswordPage = () => {
           </CardContent>
 
           <CardFooter>
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button type="submit" className="w-full mt-4" disabled={isSubmitting}>
               {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Update Password"}
             </Button>
           </CardFooter>
         </form>
       </Card>
+      <p className="text-xs text-center text-muted-foreground mt-6">
+        &copy; 2026 Micromint. All rights reserved.
+      </p>
     </div>
   );
 };
