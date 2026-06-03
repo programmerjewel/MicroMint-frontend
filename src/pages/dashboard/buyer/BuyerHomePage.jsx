@@ -27,10 +27,13 @@ const BuyerHomePage = () => {
   const { mutate: reviewSubmission } = useMutation({
     mutationFn: async ({ id, action }) =>
       axiosSecure.patch(`/submitted-task/${id}/review`, { action }),
-    onSuccess: (_, { action, workerEmail, amount }) => {
-      queryClient.invalidateQueries(["buyer-pending-submissions", user?.email]);
-      if (action === "approved") {
-        toast.success(`Approved! $${amount} coins sent to ${workerEmail}`);
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["buyer-pending-submissions", user?.email] });
+      
+      if (variables.action === "approved") {
+        toast.success(`Approved! ${variables.amount.toFixed(2)} coins sent to ${variables.workerEmail}`);
+      } else if (variables.action === "in_review") {
+        toast.warning("Revision requested. Task returned to worker."); 
       } else {
         toast.error("Submission rejected. Task slot reopened.");
       }
@@ -40,12 +43,16 @@ const BuyerHomePage = () => {
     },
   });
 
-  const handleApprove = (submissionId, workerEmail) => {
-    reviewSubmission({ id: submissionId, action: "approved", workerEmail});
+  const handleApprove = (submissionId, workerEmail, amount) => {
+    reviewSubmission({ id: submissionId, action: "approved", workerEmail, amount });
   };
 
-  const handleReject = (submissionId, taskId) => {
-    reviewSubmission({ id: submissionId, action: "rejected", taskId });
+  const handleReject = (submissionId) => {
+    reviewSubmission({ id: submissionId, action: "rejected" });
+  };
+
+  const handleRevision = (submissionId) => {
+    reviewSubmission({ id: submissionId, action: "in_review" });
   };
 
   if (isLoading)
@@ -60,13 +67,14 @@ const BuyerHomePage = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold my-4">Submissions to Review</h2>
           <Badge variant="amber">
-            {submissions.length} pending reviews
+            {submissions.length} Action Required
           </Badge>
         </div>
         <PendingSubmissionTable
           submissions={submissions}
           onApprove={handleApprove}
           onReject={handleReject}
+          onRevision={handleRevision}
         />
       </div>
     </section>

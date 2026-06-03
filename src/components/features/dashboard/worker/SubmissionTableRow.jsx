@@ -3,12 +3,13 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  RotateCcw,
   CheckCircle2,
   Clock,
   AlertCircle,
   Ban,
   Trash2,
+  RotateCw,
+  RefreshCw,
 } from "lucide-react";
 import SubmissionDetailsModal from "./SubmissionDetailsModal";
 import { LiaCoinsSolid } from "react-icons/lia";
@@ -34,6 +35,11 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
       icon: <AlertCircle className="w-3 h-3" />,
       label: "Rejected",
     },
+    in_review: {
+      variant: "amber",
+      icon: <RefreshCw className="w-3 h-3 animate-spin-slow" />, 
+      label: "In Revision",
+    },
     "cancelled account deleted": {
       variant: "cancelledAdmin",
       icon: <AlertCircle className="w-3 h-3" />,
@@ -56,7 +62,7 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
   const currentConfig = statusConfig[normalizedStatus] || {
     variant: "outline",
     icon: null,
-    label: status, // Fallback if a brand new status pops up
+    label: status,
   };
 
   return (
@@ -101,17 +107,21 @@ const SubmissionTableRow = ({ submission, onCancel }) => {
           />
         ) : status === "approved" ? (
           <SubmissionDetailsModal submission={submission} />
-        ) : status === "rejected" ? (
+        ) : status === "rejected" || status === "in_review" ? (
           <Link to={`/dashboard/tasks/${task_id}`}>
             <Button
               variant="outline"
               size="xs"
-              className="text-xs border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300 transition-all shadow-sm"
+              className={`text-xs transition-all shadow-sm ${
+                status === "in_review"
+                  ? "border-amber-200 text-amber-600 hover:bg-amber-50 hover:border-amber-300"
+                  : "border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-300"
+              }`}
             >
-              <RotateCcw className="w-3.5 h-3.5 mr-1" /> Resubmit
+              <RotateCw className="w-3.5 h-3.5 mr-1" /> Fix & Resubmit
             </Button>
           </Link>
-        ) : (
+        ): (
           <Button
             variant="ghost"
             size="sm"

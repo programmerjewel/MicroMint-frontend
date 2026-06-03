@@ -57,7 +57,8 @@ const ConfirmActionModal = ({
               "text-white transition-colors border-none",
               variant === "destructive" && "bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600",
               variant === "success" && "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600",
-              variant === "default" && "bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
+              variant === "default" && "bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200",
+              variant === "warning" && "bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-500"
             )}
           >
             {confirmText}

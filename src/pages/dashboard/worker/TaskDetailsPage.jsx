@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   Clock,
   XCircle,
+  RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
@@ -44,9 +45,10 @@ const buildConfig = ({
   user,
   completionDate,
 }) => {
-  const isPending = status === "pending";
   const isApproved = status === "approved";
+  const isPending = status === "pending";
   const isRejected = status === "rejected";
+  const isInReview = status === "in_review"; // Added state reference
 
   let banner = null;
 
@@ -62,11 +64,21 @@ const buildConfig = ({
   } else if (isPending) {
     banner = {
       classes:
-        "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300",
+        "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900/50 text-blue-800 dark:text-blue-300",
       icon: (
-        <Clock className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400" />
+        <Clock className="w-5 h-5 shrink-0 text-blue-600 dark:text-blue-400" />
       ),
       message: "Your work is being reviewed by the buyer.",
+    };
+  } else if (isInReview) {
+    // New Amber Banner for Revisions
+    banner = {
+      classes:
+        "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300",
+      icon: (
+        <RefreshCw className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400 animate-spin-slow" />
+      ),
+      message: "The buyer requested a revision. Please modify your proof below and submit again.",
     };
   } else if (isRejected) {
     banner = {
@@ -96,6 +108,9 @@ const buildConfig = ({
   } else if (isPending) {
     title = "Review Pending";
     description = "The buyer is currently reviewing your proof.";
+  } else if (isInReview) {
+    title = "Revision Requested";
+    description = "Update your documentation adjustments and send back.";
   } else if (isRejected) {
     title = "Resubmit Work";
     description = "Please address the buyer's concerns and submit again.";
@@ -116,13 +131,16 @@ const buildConfig = ({
   else if (isApproved) buttonLabel = "Paid & Completed ✓";
   else if (isPending) buttonLabel = "Waiting for Approval";
   else if (isDeadlinePassed) buttonLabel = "Deadline Expired";
+  else if (isInReview) buttonLabel = "Submit Revision"; // Custom label for in_review
   else if (isRejected) buttonLabel = "Resubmit Task";
   else if (isTaskFull) buttonLabel = "Task Limit Reached";
   else if (!user) buttonLabel = "Login to Start Earning";
   else buttonLabel = "Submit Task";
 
+  // CRITICAL: Ensure `in_review` and `rejected` states are NOT blocked 
+  // so workers can interact with the input form field.
   const isBlocked =
-    isPending || isApproved || (isTaskFull && !isRejected) || isDeadlinePassed;
+    isPending || isApproved || (isTaskFull && !isRejected && !isInReview) || isDeadlinePassed;
 
   return {
     banner,
@@ -132,6 +150,7 @@ const buildConfig = ({
     isBlocked,
     isApproved,
     isPending,
+    isInReview,
   };
 };
 
@@ -176,7 +195,7 @@ const TaskDetailsPage = () => {
   const isDeadlinePassed = isDatePassed(task.completion_date);
   const isTaskFull = task.required_workers === 0;
 
-  const { banner, title, description, buttonLabel, isBlocked, isApproved } =
+  const { banner, title, description, buttonLabel, isBlocked, isApproved, isInReview } =
     buildConfig({
       status,
       isDeadlinePassed,
@@ -202,11 +221,16 @@ const TaskDetailsPage = () => {
 
     try {
       await axiosSecure.post("/submitted-task", submittedTaskData);
-      toast.success(
-        status === "rejected"
-          ? "Resubmitted successfully!"
-          : "Task submitted successfully!",
-      );
+      
+      // Dynamic success messages
+      if (status === "in_review") {
+        toast.success("Revision submitted successfully!");
+      } else if (status === "rejected") {
+        toast.success("Resubmitted successfully!");
+      } else {
+        toast.success("Task submitted successfully!");
+      }
+      
       refetch();
       reset();
     } catch (error) {
@@ -283,7 +307,7 @@ const TaskDetailsPage = () => {
                 key={label}
                 className="flex flex-col items-center justify-center gap-1 py-4 px-2 bg-muted/30 dark:bg-muted/10"
               >
-                <span className=" text-brand-primary dark:text-brand-secondary">{icon}</span>
+                <span className="text-brand-primary dark:text-brand-secondary">{icon}</span>
                 <span className="text-xs text-muted-foreground">{label}</span>
                 <span className="font-semibold text-sm text-center text-slate-800 dark:text-slate-200">
                   {value}
@@ -367,6 +391,8 @@ const TaskDetailsPage = () => {
                   className={`w-full mt-4 text-white font-medium ${
                     isApproved
                       ? "bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
+                      : isInReview
+                      ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600" // Custom color theme for revisions
                       : "bg-primary text-primary-foreground hover:bg-primary/90"
                   }`}
                   variant={isBlocked ? "secondary" : "default"}
