@@ -9,43 +9,43 @@ import SectionHeader from "@/components/ui/section-header";
 const faqs = [
   {
     question: "What is MicroMint?",
-    answer: "MicroMint is a micro-tasking platform that connects task creators (Buyers) with skilled workers who complete small digital tasks in exchange for earnings. Our platform facilitates everything from data entry and content moderation to social media engagement and web research."
+    answer: "MicroMint is a micro-tasking platform connecting Buyers with Workers to complete small digital tasks like data entry, content moderation, social media engagement, and web research for earnings."
   },
   {
     question: "How long does it take to get paid?",
-    answer: "Withdrawal processing times vary by payment method, typically ranging from 24 hours to 5 business days. Your earnings are available for withdrawal immediately after task approval."
+    answer: "Withdrawals take 24 hours to 5 business days depending on payment method. Earnings are available immediately after task approval."
   },
   {
-    question: "How does the task approval process work?",
-    answer: "After you submit a completed task, the Buyer reviews your work against their specified requirements. They can approve, reject, or request revisions. You'll receive notifications about your submission status and detailed feedback if revisions are needed."
+    question: "How does task approval work?",
+    answer: "Buyers review your submission against their requirements and can approve, reject, or request revisions. You'll receive notifications with feedback if revisions are needed."
   },
   {
-    question: "What happens if my task submission is rejected?",
-    answer: "If a submission is rejected, you'll receive specific feedback explaining why. You may have the opportunity to resubmit depending on the task guidelines. Repeated rejections may affect your account standing, so always read task instructions carefully."
+    question: "What if my task is rejected?",
+    answer: "You'll receive specific feedback explaining why. You may resubmit depending on task guidelines. Always read instructions carefully as repeated rejections may affect your account standing."
   },
   {
     question: "How do Buyers purchase coins?",
-    answer: "Buyers can purchase coins directly through our secure payment system using various payment methods including credit cards, debit cards, and digital wallets. Coins are credited instantly and can be used to create and fund tasks immediately."
+    answer: "Buyers can purchase coins instantly via credit cards, debit cards, or digital wallets through our secure payment system. Coins can be used immediately to create and fund tasks."
   },
   {
     question: "Can I be both a Worker and a Buyer?",
-    answer: "Yes! You can switch between roles depending on your needs. Whether you want to earn by completing tasks or get work done by posting tasks, MicroMint accommodates both."
+    answer: "Yes! You can switch between roles anytime - earn by completing tasks or get work done by posting tasks."
   },
   {
     question: "How are disputes resolved?",
-    answer: "Both Workers and Buyers can report issues through our platform. Our Admin team reviews all reports impartially, examines submitted evidence, and makes fair decisions to resolve disputes while maintaining platform integrity."
+    answer: "Both parties can report issues through our platform. Our Admin team reviews evidence impartially and makes fair decisions to maintain platform integrity."
   },
 ];
 
 const FAQ = () =>{
   return (
-    <section className="container py-16 mx-auto">
-      <SectionHeader title="Frequently Asked Question" subtitle="Clear, straightforward help for workers and earners on MicroMint."/>
-      <Accordion type="single" collapsible className="md:max-w-3xl mx-auto">
+    <section className="w-10/12 mx-auto py-12">
+      <SectionHeader title="Frequently Asked Questions" subtitle="Clear, straightforward help for workers and earners on MicroMint."/>
+      <Accordion type="single" collapsible className="max-w-3xl mx-auto w-full">
         {faqs.map((faq, index) => (
-          <AccordionItem key={index} value={`item-${index}`}>
-            <AccordionTrigger className="font-semibold">{faq.question}</AccordionTrigger>
-            <AccordionContent className="text-slate-800 dark:text-slate-400">{faq.answer}</AccordionContent>
+          <AccordionItem key={index} value={`item-${index}`} className="border-b border-border/60">
+            <AccordionTrigger className="font-semibold text-brand-text">{faq.question}</AccordionTrigger>
+            <AccordionContent className="text-brand-text-muted leading-relaxed text-justify tracking-tight">{faq.answer}</AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>

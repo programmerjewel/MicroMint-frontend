@@ -75,14 +75,14 @@ const Testimonials = () => {
   // Testimonial Card component
   const TestimonialCard = ({ testimonial }) => {
     return (
-      <div className="w-87.5 md:w-100 mx-4 bg-white dark:bg-gray-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 transition-colors duration-300">
+      <div className="w-60 md:w-80 shrink-0 mx-3 rounded-2xl p-5 md:p-6 border transition-all duration-300 bg-card border-border">
         {/* Quote Icon */}
         <div className="mb-4">
-          <BiSolidQuoteLeft size={45} className="text-emerald-400 dark:text-emerald-400/60" />
+          <BiSolidQuoteLeft size={45} className="text-brand-secondary" />
         </div>
 
         {/* Quote Text */}
-        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 line-clamp-4">
+        <p className="text-xs md:text-sm text-brand-text-muted mb-4 md:mb-6 leading-relaxed text-justify line-clamp-5 font-normal transition-colors duration-300">
           "{testimonial.quote}"
         </p>
 
@@ -99,8 +99,8 @@ const Testimonials = () => {
             className="w-12 h-12 rounded-full object-cover border-2 border-indigo-100 dark:border-indigo-950"
           />
           <div>
-            <h3 className="font-semibold text-slate-900 dark:text-slate-100">{testimonial.name}</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">{testimonial.role}</p>
+            <h3 className="text-sm md:text-base font-semibold tracking-tight text-brand-text">{testimonial.name}</h3>
+            <p className="text-xs text-muted-foreground">{testimonial.role}</p>
           </div>
         </div>
       </div>
@@ -108,14 +108,12 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-16 overflow-hidden bg-background">
-      <div className="max-w-7xl mx-auto px-4 mb-12">
+    <section className="w-10/12 mx-auto py-12 overflow-hidden bg-background">
         {/* Section Header */}
         <SectionHeader 
           title="What Our Users Say" 
-          subtitle="Join thousands of satisfied workers and businesses who trust SwiftBounty for their micro-task needs."
+          subtitle="Join thousands of satisfied workers and businesses who trust MicroMint for their micro-task needs."
         />
-      </div>
 
       {/* Marquee Container with explicit relative wrapper for modern fading masks */}
       <div className="relative w-full">
@@ -127,7 +125,7 @@ const Testimonials = () => {
 
         <Marquee
           speed={60}
-          gradient={false} // Disabled react-fast-marquee's native color gradient tool to prevent light bleed flashes
+          gradient={false} 
         >
           {testimonials.map((testimonial) => (
             <TestimonialCard key={testimonial.id} testimonial={testimonial} />

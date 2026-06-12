@@ -23,14 +23,12 @@ export function ThemeToggle() {
         relative transition-all duration-300 ease-in-out
 
         /* Mobile */
-        h-9 w-9 rounded-full border-none shadow-xl
-        bg-brand-primary/90 hover:bg-brand-primary hover:scale-105
-        active:scale-95
+        h-8 w-8 rounded-full border border-input border-solid bg-transparent
+        text-foreground hover:bg-accent active:scale-95
         
         /* Desktop */
-        md:rounded-md md:border md:border-input md:border-solid
-        md:bg-transparent md:text-foreground md:shadow-none
-        md:hover:bg-accent md:hover:scale-100
+        md:rounded-md 
+
       `}
       title={`Current mode: ${mode}`}
     >

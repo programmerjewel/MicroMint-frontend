@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { LogOut, User, LayoutDashboard, ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { LogOut, User, LayoutDashboard} from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import {
   DropdownMenu,
@@ -13,10 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useCoin from "@/hooks/useCoin";
 import useRole from "@/hooks/useRole";
-import { LiaCoinsSolid } from "react-icons/lia";
 
 const UserDropdown = ({ align = "end", variant = "public" }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, logoutUser } = useAuth();
   const { coins } = useCoin();
   const { role } = useRole();
@@ -27,7 +23,7 @@ const UserDropdown = ({ align = "end", variant = "public" }) => {
   const profilePath = variant === "dashboard" ? "/dashboard/profile" : "/profile";
 
   return (
-    <DropdownMenu onOpenChange={setIsDropdownOpen}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-1.5 outline-none hover:bg-accent/50 rounded-full p-0.5 transition-all focus-visible:ring-2 focus-visible:ring-ring">
           {user?.photoURL ? (
@@ -35,7 +31,7 @@ const UserDropdown = ({ align = "end", variant = "public" }) => {
               src={user?.photoURL}
               alt="Avatar"
               referrerPolicy="no-referrer"
-              className="h-6 w-6 md:h-8 md:w-8 rounded-full object-cover border border-border shadow-sm"
+              className="h-8 w-8 rounded-full object-cover border border-border shadow-sm"
             />
           ) : (
             <div className="h-6 w-6 md:h-8 md:w-8 rounded-full bg-primary flex items-center justify-center shrink-0 border border-border shadow-sm">
@@ -44,13 +40,7 @@ const UserDropdown = ({ align = "end", variant = "public" }) => {
               </span>
             </div>
           )}
-          <ChevronDown
-            className={cn(
-              "h-4 w-4 text-muted-foreground transition-transform duration-200",
-              isDropdownOpen && "rotate-180"
-            )}
-          />
-        </button>
+          </button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align={align} className="w-56 mt-2">

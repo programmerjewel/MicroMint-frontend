@@ -1,4 +1,3 @@
-
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import useCoin from "@/hooks/useCoin";
 import useRole from "@/hooks/useRole";
@@ -18,32 +17,29 @@ const DashboardHeader = () => {
       {/* Left Side */}
       <div className="flex items-center gap-3">
         <SidebarTrigger />
-        <div className="h-4 w-px bg-border"></div>
+        <div className="h-4 w-px bg-border" />
         <div className="font-bold text-xl px-2">MicroMint</div>
       </div>
 
       {/* Right Side */}
-      <div className="flex items-center h-full">
-        <div className="hidden md:flex flex-col gap-1.5 items-end px-4 text-sm border-r h-fit">
-          <div className="flex gap-1 font-bold text-foreground">
-            <LiaCoinsSolid className="text-amber-600" size={20} />
-            {coins} | Coin
+      <div className="flex items-center gap-4 h-full">
+        {/* User Stats Info Block */}
+        <div className="hidden md:flex flex-col gap-0.5 items-end text-sm h-fit">
+          <div className="flex items-center gap-1 font-bold text-foreground">
+            <LiaCoinsSolid className="text-amber-600" size={15} />
+            {coins}
           </div>
-          <span className="text-muted-foreground text-sm font-medium capitalize">
-            {role} | Role
+          <span className="text-muted-foreground text-xs font-semibold capitalize">
+            {role}
           </span>
         </div>
         
-        <div className="pl-2 pr-2">
+        {/* Global Utilities Group */}
+        <div className="flex items-center gap-3">
+          <NotificationDropdown userEmail={user?.email} />
+          <ThemeToggle />
           <UserDropdown align="end" variant="dashboard" />
         </div>
-        
-        <div className="fixed bottom-6 right-6 z-50 md:static md:bottom-auto md:right-auto md:z-auto md:mr-2 drop-shadow-md md:drop-shadow-none">
-          <ThemeToggle />
-        </div>
-
-        {/* Notification Dropdown Wrapper Component */}
-        <NotificationDropdown userEmail={user?.email} />
       </div>
     </header>
   );
