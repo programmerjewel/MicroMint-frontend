@@ -7,38 +7,51 @@ import UserDropdown from "@/components/shared/UserDropdown";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import NotificationDropdown from "./NotificationDropdown"; 
 
-const DashboardHeader = () => {
-  const { role } = useRole();
-  const { coins } = useCoin();
+const DashboardHeader = ({ isLoadingAuth }) => {
+  const { role, loading: isRoleLoading } = useRole();
+  const { coins, loading: isCoinLoading } = useCoin(); // Safely assuming it exports loading
   const { user } = useAuth(); 
+
+  const metricsLoading = isLoadingAuth || isRoleLoading || isCoinLoading;
 
   return (
     <header className="flex h-16 items-center justify-between border-b px-4 bg-background relative">
-      {/* Left Side */}
       <div className="flex items-center gap-3">
         <SidebarTrigger />
         <div className="h-4 w-px bg-border" />
         <div className="font-bold text-xl px-2">MicroMint</div>
       </div>
 
-      {/* Right Side */}
       <div className="flex items-center gap-4 h-full">
-        {/* User Stats Info Block */}
-        <div className="hidden md:flex flex-col gap-0.5 items-end text-sm h-fit">
-          <div className="flex items-center gap-1 font-bold text-foreground">
-            <LiaCoinsSolid className="text-amber-600" size={15} />
-            {coins}
+        {metricsLoading ? (
+          <div className="hidden md:flex flex-col gap-1.5 items-end animate-pulse">
+            <div className="h-4 bg-muted rounded w-12" />
+            <div className="h-3 bg-muted rounded w-16" />
           </div>
-          <span className="text-muted-foreground text-xs font-semibold capitalize">
-            {role}
-          </span>
-        </div>
+        ) : (
+          <div className="hidden md:flex flex-col gap-0.5 items-end text-sm h-fit">
+            <div className="flex items-center gap-1 font-bold text-foreground">
+              <LiaCoinsSolid className="text-amber-600" size={15} />
+              {coins}
+            </div>
+            <span className="text-muted-foreground text-xs font-semibold capitalize">
+              {role}
+            </span>
+          </div>
+        )}
         
-        {/* Global Utilities Group */}
         <div className="flex items-center gap-3">
-          <NotificationDropdown userEmail={user?.email} />
+          {isLoadingAuth ? (
+            <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+          ) : (
+            <NotificationDropdown userEmail={user?.email} />
+          )}
           <ThemeToggle />
-          <UserDropdown align="end" variant="dashboard" />
+          {isLoadingAuth ? (
+            <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+          ) : (
+            <UserDropdown align="end" variant="dashboard" />
+          )}
         </div>
       </div>
     </header>

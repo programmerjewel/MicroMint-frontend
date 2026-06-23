@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
 
-// 1. Keep this local (private) to avoid the Fast Refresh warning
 const ThemeContext = createContext(null);
 
 export const ThemeProvider = ({
@@ -36,5 +35,4 @@ export const ThemeProvider = ({
   );
 };
 
-// 2. Export default so your hook can find it easily
 export default ThemeContext;

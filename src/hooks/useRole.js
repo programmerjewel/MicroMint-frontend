@@ -36,7 +36,7 @@ const useRole = () => {
   return {
     role: isRoleLoading ? undefined : (data?.role ?? null),
     pendingRequest: data?.pendingRequest ?? null,
-    isRoleLoading,
+    loading: isRoleLoading,
     refetch,
   };
 };

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 const SectionHeader = ({
   title, 
   subtitle, 
-  titleSize = "text-3xl md:text-4xl", 
+  titleSize = "text-2xl xs:text-3xl md:text-4xl",
   subtitleSize = "",
   className = "",
 }) => {
@@ -19,7 +19,7 @@ const SectionHeader = ({
       {/* Subtitle utilizing your registered brand muted body text variable */}
       {subtitle && (
         <p 
-          className={`${subtitleSize} w-full md:max-w-xl mx-auto leading-relaxed transition-colors duration-300 text-brand-text-muted`}
+          className={`${subtitleSize} w-full md:max-w-xl mx-auto leading-relaxed transition-colors duration-300 text-brand-text-muted text-sm`}
         >
           {subtitle}
         </p>

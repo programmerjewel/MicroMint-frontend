@@ -62,7 +62,7 @@ const NotificationDropdown = ({ userEmail }) => {
       >
         <FiBell className="h-6 w-6 text-muted-foreground dark:text-neutral-300" />
         {unreadCount > 0 && (
-          <span className="absolute top-4 left-5 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] font-semibold animate-in zoom-in duration-200 text-white">
+          <span className="absolute top-4 left-5 grid h-4 w-4 place-items-center rounded-full bg-destructive text-[10px] font-semibold leading-none text-white animate-in zoom-in duration-200">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}

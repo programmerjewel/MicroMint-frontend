@@ -55,27 +55,34 @@ const BuyerHomePage = () => {
     reviewSubmission({ id: submissionId, action: "in_review" });
   };
 
-  if (isLoading)
-    return <Loading variant="fullscreen" text="Loading submissions..." size="xl" />;
-
   return (
-    <section>
+    <section className="space-y-6">
       <Toaster position="top-center" richColors />
       <DashboardSectionHeader title="Buyer Dashboard" />
       <BuyerStats />
-      <div>
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold my-4">Submissions to Review</h2>
+      
+      <div className="relative">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Submissions to Review</h2>
           <Badge variant="amber">
-            {submissions.length} Action Required
+            {isLoading ? "..." : `${submissions.length} Action Required`}
           </Badge>
         </div>
-        <PendingSubmissionTable
-          submissions={submissions}
-          onApprove={handleApprove}
-          onReject={handleReject}
-          onRevision={handleRevision}
-        />
+
+        {/* Instead of shifting coordinates or going full screen, 
+            leverage an localized block overlay container inside the page framework */}
+        {isLoading ? (
+          <div className="flex min-h-75 items-center justify-center border-2 border-dashed rounded-xl bg-card">
+            <Loading variant="default" text="Loading submissions..." size="lg" />
+          </div>
+        ) : (
+          <PendingSubmissionTable
+            submissions={submissions}
+            onApprove={handleApprove}
+            onReject={handleReject}
+            onRevision={handleRevision}
+          />
+        )}
       </div>
     </section>
   );

@@ -145,10 +145,6 @@ const TaskListPage = () => {
               onChange={(e) => setSearchInput(e.target.value)}
               className="pl-11 py-3"
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground/60 dark:text-slate-400 font-mono text-xs border border-slate-200 dark:border-slate-700 px-2.5 py-0.5 rounded-md hidden sm:flex items-center gap-1.5 bg-muted dark:bg-[#15171E]">
-              <kbd>Ctrl + </kbd>
-              <kbd>K</kbd>
-            </div>
           </div>
 
           <div className="relative w-full md:w-52">
