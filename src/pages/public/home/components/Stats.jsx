@@ -85,6 +85,7 @@ const Stats = () => {
   useEffect(() => {
     if (isLoading || !containerRef.current) return;
 
+    /*
     const ctx = gsap.context(() => {
       if (headerRef.current) {
         gsap.fromTo(
@@ -126,6 +127,7 @@ const Stats = () => {
     }, containerRef);
 
     return () => ctx.revert();
+    */
   }, [isLoading]);
 
   if (isLoading) {
